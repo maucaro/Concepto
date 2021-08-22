@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,9 @@ namespace Vida.Prueba.WebApp
       services.AddRazorPages();
       services.AddSingleton<IUserGroups, UserGroups>();
       services.AddTransient<IClaimsTransformation, DbClaimsTransformation>();
+      services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
+      services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+      services.AddAuthorization();
       services
       .AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
       .AddJwtBearer(options =>

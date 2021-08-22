@@ -65,6 +65,9 @@
     <Build Include="Groups.sql" />
     <Build Include="UserGroups.sql" />
     <Build Include="dbo\Stored Procedures\GetAllUserGroups.sql" />
+    <Build Include="Permissions.sql" />
+    <Build Include="GroupPermissions.sql" />
+    <Build Include="dbo\Stored Procedures\GetAllPermissionGroups.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DbUsers.refactorlog" />

@@ -13,21 +13,23 @@ namespace Vida.Prueba.WebApp
   public class UserGroups : IUserGroups
   {
     private Dictionary<string, List<string>> _userGroups;
-    private string _connectionString;
-    private string _storedProcedure;
-    private string _emailField;
-    private string _groupField;
-    private Timer _timer;
+    private readonly string _connectionString;
+    private readonly string _storedProcedure;
+    private readonly string _emailField;
+    private readonly string _groupField;
+    private readonly Timer _timer;
     public UserGroups(IConfiguration configuration)
     {
       _connectionString = configuration.GetSection("DbUsers").GetValue<string>("ConnectionString");
-      _storedProcedure = configuration.GetSection("DbUsers").GetValue<string>("StoredProcedure");
+      _storedProcedure = configuration.GetSection("DbUsers").GetValue<string>("UserGroupsSP");
       _emailField = configuration.GetSection("DbUsers").GetValue<string>("EmailField");
       _groupField = configuration.GetSection("DbUsers").GetValue<string>("GroupField");
       var interval = configuration.GetSection("DbUsers").GetValue<int>("Interval");
       this.UpdateUserGroups();
-      _timer = new System.Timers.Timer();
-      _timer.Interval = interval;
+      _timer = new System.Timers.Timer
+      {
+        Interval = interval
+      };
       _timer.Elapsed += this.UpdateUserGroups;
       _timer.AutoReset = true;
       _timer.Enabled = true;
@@ -40,36 +42,34 @@ namespace Vida.Prueba.WebApp
     public void UpdateUserGroups()
     {
       Dictionary<string, List<string>> userGroups = new();
-      using (SqlConnection connection = new SqlConnection(_connectionString))
+      using (SqlConnection connection = new(_connectionString))
       {
         connection.Open();
         SqlCommand command = new();
         command.Connection = connection;
         command.CommandText = _storedProcedure;
         command.CommandType = System.Data.CommandType.StoredProcedure;
-        using (SqlDataReader reader = command.ExecuteReader())
+        using SqlDataReader reader = command.ExecuteReader();
+        if (reader.HasRows)
         {
-          if (reader.HasRows)
+          while (reader.Read())
           {
-            while (reader.Read())
+            var email = (string)reader[_emailField];
+            var group = (string)reader[_groupField];
+            if (userGroups.ContainsKey(email))
             {
-              var email = (string)reader[_emailField];
-              var group = (string)reader[_groupField];
-              if (userGroups.ContainsKey(email))
-              {
-                userGroups.GetValueOrDefault(email).Add(group);
-              }
-              else
-              {
-                List<string> groups = new();
-                groups.Add(group);
-                userGroups.Add(email, groups);
-              }
-
+              userGroups.GetValueOrDefault(email).Add(group);
             }
+            else
+            {
+              List<string> groups = new();
+              groups.Add(group);
+              userGroups.Add(email, groups);
+            }
+
           }
-          reader.Close();
         }
+        reader.Close();
       }
       _userGroups = userGroups;
     }

@@ -21,12 +21,18 @@ namespace Vida.Prueba.WebApp
       foreach (string group in groups)
       {
         ClaimsIdentity claimsIdentity = new();
-        var claimType = claimsIdentity.RoleClaimType;
+        var claimType = ClaimTypes.Role;
         if (!principal.HasClaim(claimType, group))
         {
           claimsIdentity.AddClaim(new Claim(claimType, group));
           principal.AddIdentity(claimsIdentity);
         }
+      }
+      if (!principal.HasClaim("Permission", "loquesea"))
+      {
+        ClaimsIdentity claim = new();
+        claim.AddClaim(new Claim("Permission", "loquesea"));
+        principal.AddIdentity(claim);
       }
       return Task.FromResult(principal);
     }
