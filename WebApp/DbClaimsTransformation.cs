@@ -20,19 +20,12 @@ namespace Vida.Prueba.WebApp
       var groups = _userGroups.GetGroups(email);
       foreach (string group in groups)
       {
-        ClaimsIdentity claimsIdentity = new();
-        var claimType = ClaimTypes.Role;
-        if (!principal.HasClaim(claimType, group))
+        if (!principal.HasClaim(ClaimTypes.Role, group))
         {
-          claimsIdentity.AddClaim(new Claim(claimType, group));
+          ClaimsIdentity claimsIdentity = new();
+          claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, group));
           principal.AddIdentity(claimsIdentity);
         }
-      }
-      if (!principal.HasClaim("Permission", "loquesea"))
-      {
-        ClaimsIdentity claim = new();
-        claim.AddClaim(new Claim("Permission", "loquesea"));
-        principal.AddIdentity(claim);
       }
       return Task.FromResult(principal);
     }
