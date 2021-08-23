@@ -8,11 +8,11 @@ namespace Vida.Prueba.WebApp
 {
   public interface IUserGroups
   {
-    public IReadOnlyList<string> GetGroups(string email);
+    public IReadOnlySet<string> GetGroups(string email);
   }
   public class UserGroups : IUserGroups
   {
-    private Dictionary<string, List<string>> _userGroups;
+    private Dictionary<string, HashSet<string>> _userGroups;
     private readonly string _connectionString;
     private readonly string _storedProcedure;
     private readonly string _emailField;
@@ -41,7 +41,7 @@ namespace Vida.Prueba.WebApp
     }
     public void UpdateUserGroups()
     {
-      Dictionary<string, List<string>> userGroups = new();
+      Dictionary<string, HashSet<string>> userGroups = new();
       using (SqlConnection connection = new(_connectionString))
       {
         connection.Open();
@@ -62,8 +62,7 @@ namespace Vida.Prueba.WebApp
             }
             else
             {
-              List<string> groups = new();
-              groups.Add(group);
+              HashSet<string> groups = new() { group };
               userGroups.Add(email, groups);
             }
 
@@ -74,9 +73,9 @@ namespace Vida.Prueba.WebApp
       _userGroups = userGroups;
     }
 
-    public IReadOnlyList<string> GetGroups(string email)
+    public IReadOnlySet<string> GetGroups(string email)
     {
-      return _userGroups.GetValueOrDefault(email).AsReadOnly();
+      return _userGroups.GetValueOrDefault(email);
     }
   }
 }

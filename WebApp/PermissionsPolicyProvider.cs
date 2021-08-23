@@ -9,12 +9,10 @@ namespace Vida.Prueba.WebApp
   public class PermissionsPolicyProvider : DefaultAuthorizationPolicyProvider
   {
     private readonly AuthorizationOptions _options;
-    private readonly IConfiguration _configuration;
 
-    public PermissionsPolicyProvider(IOptions<AuthorizationOptions> options, IConfiguration configuration) : base(options)
+    public PermissionsPolicyProvider(IOptions<AuthorizationOptions> options) : base(options)
     {
       _options = options.Value;
-      _configuration = configuration;
     }
 
     public override async Task<AuthorizationPolicy> GetPolicyAsync(string policyName)

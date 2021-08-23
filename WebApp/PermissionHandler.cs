@@ -12,7 +12,7 @@ namespace Vida.Prueba.WebApp
 {
   public class PermissionHandler : AuthorizationHandler<HasPermission>
   {
-    private Dictionary<string, List<string>> _permissionGroups;
+    private Dictionary<string, HashSet<string>> _permissionGroups;
     private readonly string _connectionString;
     private readonly string _storedProcedure;
     private readonly string _permissionField;
@@ -44,7 +44,7 @@ namespace Vida.Prueba.WebApp
 
     private void UpdatePermissionGroups()
     {
-      Dictionary<string, List<string>> permissionGroups = new();
+      Dictionary<string, HashSet<string>> permissionGroups = new();
       using (SqlConnection connection = new(_connectionString))
       {
         connection.Open();
@@ -65,8 +65,7 @@ namespace Vida.Prueba.WebApp
             }
             else
             {
-              List<string> groups = new();
-              groups.Add(group);
+              HashSet<string> groups = new() { group };
               permissionGroups.Add(permission, groups);
             }
 
@@ -79,17 +78,13 @@ namespace Vida.Prueba.WebApp
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasPermission requirement)
     {
-      if (_permissionGroups.ContainsKey(requirement.Permission) && context.User.Claims.Count() > 0)
+      if (_permissionGroups.ContainsKey(requirement.Permission) && context.User.Claims.Any())
       {
-        List<string> permissionGroups = _permissionGroups.GetValueOrDefault(requirement.Permission);
-        List<string> userGroups = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-        foreach (string group in userGroups)
-        {
-          if (permissionGroups.Contains(group))
-          {
+        HashSet<string> permissionGroups = _permissionGroups.GetValueOrDefault(requirement.Permission);
+        HashSet<string> userGroups = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToHashSet();
+        if (permissionGroups.Overlaps(userGroups))
+        { 
             context.Succeed(requirement);
-            break;
-          }
         }
       }
       return Task.CompletedTask;
