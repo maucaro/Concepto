@@ -14,4 +14,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="GroupId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="b2dd8623-b8d3-479c-956d-a4835ff2f04b" ChangeDateTime="08/23/2021 17:30:16">
+    <Property Name="ElementName" Value="[dbo].[GroupPermissions].[GroupId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[GroupPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="RoleId" />
+  </Operation>
 </Operations>

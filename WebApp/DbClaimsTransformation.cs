@@ -7,7 +7,6 @@ namespace Vida.Prueba.WebApp
 {
   public class DbClaimsTransformation : IClaimsTransformation
   {
-    private const string _emailClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
     private readonly IUserGroups _userGroups;
     public DbClaimsTransformation(IUserGroups userGroups)
     {
@@ -16,7 +15,7 @@ namespace Vida.Prueba.WebApp
 
     public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {
-      string email = principal.Claims.First(claim => claim.Type == _emailClaimType).Value;
+      string email = principal.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
       var groups = _userGroups.GetGroups(email);
       foreach (string group in groups)
       {

@@ -61,13 +61,10 @@
     <Folder Include="dbo\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Users.sql" />
-    <Build Include="Groups.sql" />
-    <Build Include="UserGroups.sql" />
-    <Build Include="dbo\Stored Procedures\GetAllUserGroups.sql" />
+    <Build Include="Roles.sql" />
     <Build Include="Permissions.sql" />
-    <Build Include="GroupPermissions.sql" />
-    <Build Include="dbo\Stored Procedures\GetAllPermissionGroups.sql" />
+    <Build Include="RolePermissions.sql" />
+    <Build Include="dbo\Stored Procedures\GetAllPermissionRoles.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DbUsers.refactorlog" />

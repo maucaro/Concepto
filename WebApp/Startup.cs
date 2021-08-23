@@ -24,8 +24,8 @@ namespace Vida.Prueba.WebApp
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddRazorPages();
-      services.AddSingleton<IUserGroups, UserGroups>();
-      services.AddTransient<IClaimsTransformation, DbClaimsTransformation>();
+      //services.AddSingleton<IUserGroups, UserGroups>();
+      //services.AddTransient<IClaimsTransformation, DbClaimsTransformation>();
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
       services.AddAuthorization();

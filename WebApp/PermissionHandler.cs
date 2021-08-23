@@ -12,39 +12,39 @@ namespace Vida.Prueba.WebApp
 {
   public class PermissionHandler : AuthorizationHandler<HasPermission>
   {
-    private Dictionary<string, HashSet<string>> _permissionGroups;
+    private Dictionary<string, HashSet<string>> _permissionRoles;
     private readonly string _connectionString;
     private readonly string _storedProcedure;
     private readonly string _permissionField;
-    private readonly string _groupField;
+    private readonly string _roleField;
     private readonly Timer _timer;
 
 
     public PermissionHandler(IConfiguration configuration)
     {
       _connectionString = configuration.GetSection("DbUsers").GetValue<string>("ConnectionString");
-      _storedProcedure = configuration.GetSection("DbUsers").GetValue<string>("PermissionGroupsSP");
+      _storedProcedure = configuration.GetSection("DbUsers").GetValue<string>("PermissionRolesSP");
       _permissionField = configuration.GetSection("DbUsers").GetValue<string>("PermissionField");
-      _groupField = configuration.GetSection("DbUsers").GetValue<string>("GroupField");
+      _roleField = configuration.GetSection("DbUsers").GetValue<string>("RoleField");
       var interval = configuration.GetSection("DbUsers").GetValue<int>("Interval");
-      this.UpdatePermissionGroups();
+      this.UpdatePermissionRoles();
       _timer = new System.Timers.Timer
       {
         Interval = interval
       };
-      _timer.Elapsed += this.UpdatePermissionGroups;
+      _timer.Elapsed += this.UpdatePermissionRoles;
       _timer.AutoReset = true;
       _timer.Enabled = true;
     }
 
-    private void UpdatePermissionGroups(Object source, System.Timers.ElapsedEventArgs e)
+    private void UpdatePermissionRoles(Object source, System.Timers.ElapsedEventArgs e)
     {
-      this.UpdatePermissionGroups();
+      this.UpdatePermissionRoles();
     }
 
-    private void UpdatePermissionGroups()
+    private void UpdatePermissionRoles()
     {
-      Dictionary<string, HashSet<string>> permissionGroups = new();
+      Dictionary<string, HashSet<string>> permissionRoles = new();
       using (SqlConnection connection = new(_connectionString))
       {
         connection.Open();
@@ -58,31 +58,31 @@ namespace Vida.Prueba.WebApp
           while (reader.Read())
           {
             var permission = (string)reader[_permissionField];
-            var group = (string)reader[_groupField];
-            if (permissionGroups.ContainsKey(permission))
+            var role = (string)reader[_roleField];
+            if (permissionRoles.ContainsKey(permission))
             {
-              permissionGroups.GetValueOrDefault(permission).Add(group);
+              permissionRoles.GetValueOrDefault(permission).Add(role);
             }
             else
             {
-              HashSet<string> groups = new() { group };
-              permissionGroups.Add(permission, groups);
+              HashSet<string> roles = new() { role };
+              permissionRoles.Add(permission, roles);
             }
 
           }
         }
         reader.Close();
       }
-      _permissionGroups = permissionGroups;
+      _permissionRoles = permissionRoles;
     }
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasPermission requirement)
     {
-      if (_permissionGroups.ContainsKey(requirement.Permission) && context.User.Claims.Any())
+      if (_permissionRoles.ContainsKey(requirement.Permission) && context.User.Claims.Any())
       {
-        HashSet<string> permissionGroups = _permissionGroups.GetValueOrDefault(requirement.Permission);
-        HashSet<string> userGroups = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToHashSet();
-        if (permissionGroups.Overlaps(userGroups))
+        HashSet<string> permissionRoles = _permissionRoles.GetValueOrDefault(requirement.Permission);
+        HashSet<string> userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToHashSet();
+        if (permissionRoles.Overlaps(userRoles))
         { 
             context.Succeed(requirement);
         }
