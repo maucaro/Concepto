@@ -29,6 +29,8 @@ namespace Vida.Prueba.WebApp
       string issuer = Configuration.GetSection("JwtOptions").GetValue<string>("Issuer");
       string audience = Configuration.GetSection("JwtOptions").GetValue<string>("Audience");
       string tokenCookie = Configuration.GetSection("JwtOptions").GetValue<string>("TokenCookie");
+      // Timeout in minutes
+      int sessionSlidingTimeoutMinutes = Configuration.GetValue<int>("SessionSlidingTimeoutMinutes", 5);
       services.AddRazorPages();
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
@@ -54,7 +56,7 @@ namespace Vida.Prueba.WebApp
             {
               context.Token = context.Request.Cookies[tokenCookie];
               context.Response.Cookies.Append(tokenCookie, context.Token, new CookieOptions() 
-              { IsEssential = true, HttpOnly = true, Secure = true, Expires = DateTime.Now.AddMinutes(5) });
+              { IsEssential = true, HttpOnly = true, Secure = true, Expires = DateTime.Now.AddMinutes(sessionSlidingTimeoutMinutes) });
             }
             return Task.CompletedTask;
           }
