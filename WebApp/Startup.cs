@@ -30,9 +30,6 @@ namespace Vida.Prueba.WebApp
       string audience = Configuration.GetSection("JwtOptions").GetValue<string>("Audience");
       string tokenCookie = Configuration.GetSection("JwtOptions").GetValue<string>("TokenCookie");
       services.AddRazorPages();
-      services.AddControllersWithViews();
-      //services.AddSingleton<IUserGroups, UserGroups>();
-      //services.AddTransient<IClaimsTransformation, DbClaimsTransformation>();
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
       services.AddAuthorization();
@@ -63,14 +60,6 @@ namespace Vida.Prueba.WebApp
           }
         };
       });
-      //.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
-      //{
-      //  o.ExpireTimeSpan = TimeSpan.FromMinutes(30); // optional
-      //});
-      //var multiSchemePolicy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme, JwtBearerDefaults.AuthenticationScheme)
-      //  .RequireAuthenticatedUser()
-      //  .Build();
-      //services.AddAuthorization(o => o.DefaultPolicy = multiSchemePolicy);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,7 +97,6 @@ namespace Vida.Prueba.WebApp
 
       app.UseEndpoints(endpoints =>
       {
-        //endpoints.MapControllers();
         endpoints.MapRazorPages();
       });
     }

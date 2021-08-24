@@ -13,33 +13,14 @@
   </script>
   <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
   <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
-  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
   <script type="text/javascript">
     // FirebaseUI config.
     var uiConfig = {
       callbacks: {
         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-          var user = authResult.user;
-          var credential = authResult.credential;
-          var isNewUser = authResult.additionalUserInfo.isNewUser;
-          var providerId = authResult.additionalUserInfo.providerId;
-          var operationType = authResult.operationType;
           authResult.user.getIdToken().then(function (accessToken) {
             document.cookie = "firebaseAccessToken=" + accessToken + '; path=/' + "; SameSite=Strict";
             window.location.href = '/';
-            //return jQuery.ajax({
-            //  url: '/setcookie',
-            //  type: 'POST',
-            //  headers: {
-            //    'Authorization': 'Bearer ' + accessToken
-            //  },
-            //  success: function (result) {
-            //    resolve(true);
-            //  },
-            //  error: function (error) {
-            //    resolve(false);
-            //  }
-            //}).resolve(true);
           });
 
           // Do something with the returned AuthResult.
