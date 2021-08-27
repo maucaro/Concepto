@@ -30,7 +30,6 @@ namespace Vida.Prueba.WebApp
       string tokenCookie = Configuration.GetSection("JwtOptions").GetValue<string>("TokenCookie");
       int sessionSlidingTimeoutMinutes = Configuration.GetValue<int>("SessionSlidingTimeoutMinutes", 5);
       services.AddRazorPages();
-      services.AddControllers();
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
       services.AddAuthorization();
@@ -99,7 +98,6 @@ namespace Vida.Prueba.WebApp
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapRazorPages();
-        endpoints.MapControllers();
       });
     }
   }

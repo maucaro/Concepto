@@ -18,8 +18,8 @@
     var uiConfig = {
       callbacks: {
         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-          authResult.user.getIdToken().then(function (accessToken) {
-            document.cookie = "firebaseAccessToken=" + accessToken + '; path=/' + "; SameSite=Strict";
+          authResult.user.getIdToken().then(function (idToken) {
+            document.cookie = `firebaseAccessToken=${idToken}; path=/; SameSite=Strict`;
             window.location.href = '/';
           });
 

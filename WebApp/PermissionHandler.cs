@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,6 +13,7 @@ namespace Vida.Prueba.WebApp
 {
   public class PermissionHandler : AuthorizationHandler<HasPermission>
   {
+    private readonly ILogger _logger;
     private Dictionary<string, HashSet<string>> _permissionRoles;
     private readonly string _connectionString;
     private readonly string _storedProcedure;
@@ -21,8 +23,9 @@ namespace Vida.Prueba.WebApp
     private readonly int _intervalSeconds;
 
 
-    public PermissionHandler(IConfiguration configuration)
+    public PermissionHandler(IConfiguration configuration, ILogger<PermissionHandler> logger)
     {
+      _logger = logger;
       _connectionString = configuration.GetSection("DbUsers").GetValue<string>("ConnectionString");
       _storedProcedure = configuration.GetSection("DbUsers").GetValue<string>("PermissionRolesSP");
       _permissionField = configuration.GetSection("DbUsers").GetValue<string>("PermissionField");
@@ -53,27 +56,35 @@ namespace Vida.Prueba.WebApp
         command.Connection = connection;
         command.CommandText = _storedProcedure;
         command.CommandType = System.Data.CommandType.StoredProcedure;
-        using SqlDataReader reader = command.ExecuteReader();
-        if (reader.HasRows)
+        try
         {
-          while (reader.Read())
+          using SqlDataReader reader = command.ExecuteReader();
+          if (reader.HasRows)
           {
-            var permission = (string)reader[_permissionField];
-            var role = (string)reader[_roleField];
-            if (permissionRoles.ContainsKey(permission))
+            while (reader.Read())
             {
-              permissionRoles.GetValueOrDefault(permission).Add(role);
-            }
-            else
-            {
-              HashSet<string> roles = new() { role };
-              permissionRoles.Add(permission, roles);
-            }
+              var permission = (string)reader[_permissionField];
+              var role = (string)reader[_roleField];
+              if (permissionRoles.ContainsKey(permission))
+              {
+                permissionRoles.GetValueOrDefault(permission).Add(role);
+              }
+              else
+              {
+                HashSet<string> roles = new() { role };
+                permissionRoles.Add(permission, roles);
+              }
 
+            }
           }
+          reader.Close();
         }
-        reader.Close();
+        catch (Exception ex)
+        {
+          _logger.LogError(ex, "Error refreshing permissions and roles");
+        }
       }
+      _logger.LogInformation("Permissions and Roles refreshed");
       _permissionRoles = permissionRoles;
     }
 
