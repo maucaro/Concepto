@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -29,9 +28,9 @@ namespace Vida.Prueba.WebApp
       string issuer = Configuration.GetSection("JwtOptions").GetValue<string>("Issuer");
       string audience = Configuration.GetSection("JwtOptions").GetValue<string>("Audience");
       string tokenCookie = Configuration.GetSection("JwtOptions").GetValue<string>("TokenCookie");
-      // Timeout in minutes
       int sessionSlidingTimeoutMinutes = Configuration.GetValue<int>("SessionSlidingTimeoutMinutes", 5);
       services.AddRazorPages();
+      services.AddControllers();
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
       services.AddAuthorization();
@@ -100,6 +99,7 @@ namespace Vida.Prueba.WebApp
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapRazorPages();
+        endpoints.MapControllers();
       });
     }
   }

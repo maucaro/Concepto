@@ -18,6 +18,7 @@ namespace Vida.Prueba.WebApp
     private readonly string _permissionField;
     private readonly string _roleField;
     private readonly Timer _timer;
+    private readonly int _intervalSeconds;
 
 
     public PermissionHandler(IConfiguration configuration)
@@ -26,11 +27,11 @@ namespace Vida.Prueba.WebApp
       _storedProcedure = configuration.GetSection("DbUsers").GetValue<string>("PermissionRolesSP");
       _permissionField = configuration.GetSection("DbUsers").GetValue<string>("PermissionField");
       _roleField = configuration.GetSection("DbUsers").GetValue<string>("RoleField");
-      var interval = configuration.GetSection("DbUsers").GetValue<int>("Interval");
+      _intervalSeconds = configuration.GetSection("DbUsers").GetValue<int>("IntervalSeconds");
       this.UpdatePermissionRoles();
       _timer = new System.Timers.Timer
       {
-        Interval = interval
+        Interval = _intervalSeconds * 1000
       };
       _timer.Elapsed += this.UpdatePermissionRoles;
       _timer.AutoReset = true;
