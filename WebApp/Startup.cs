@@ -54,7 +54,7 @@ namespace Vida.Prueba.WebApp
             {
               context.Token = context.Request.Cookies[tokenCookie];
               context.Response.Cookies.Append(tokenCookie, context.Token, new CookieOptions() 
-              { IsEssential = true, HttpOnly = true, Secure = true, Expires = DateTime.Now.AddMinutes(sessionSlidingTimeoutMinutes) });
+              { IsEssential = true, HttpOnly = true, SameSite = SameSiteMode.Strict, Secure = true, Expires = DateTime.Now.AddMinutes(sessionSlidingTimeoutMinutes) });
             }
             return Task.CompletedTask;
           }

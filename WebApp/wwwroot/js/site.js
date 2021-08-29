@@ -3,8 +3,10 @@
 
 // Write your JavaScript code.
 (function () {
-  // expirationMarginMinutes = the number of minutes prior to expiration that the refresh_token will be used to obtain an new id_token
-  const expirationMarginMinutes = 5;
+  // sessionSlidingTimeoutMinutes = the number of minutes when the cookie expires 
+  // and the number of minutes prior to token expiration that the refresh_token will be used to obtain an new id_token
+  // It should have the same value as what is used in Startup.cs for cookie expiration
+  const sessionSlidingTimeoutMinutes = 5;
   const refreshTokenUrl = 'https://securetoken.googleapis.com/v1/token?key=';
   const firebaseLocalStorageDb = 'firebaseLocalStorageDb';
   const firebaseObjectStore = 'firebaseLocalStorage';
@@ -28,7 +30,7 @@
           let expTime = record.value.stsTokenManager.expirationTime;
           let apiKey = record.value.apiKey;
           let expiresInMinutes = (expTime - Date.now()) / 60000;
-          if (expiresInMinutes < expirationMarginMinutes) {
+          if (expiresInMinutes < 60 - sessionSlidingTimeoutMinutes) {
             jQuery.ajax({
               url: refreshTokenUrl + apiKey,
               type: 'POST',
@@ -39,7 +41,7 @@
             }).done(data => ProcessTokens(data));
           }
           //TODO: Remove once testing is done
-          //document.getElementById('expirationTime').textContent = 'Expires in: ' + expiresInMinutes.toString();
+          document.getElementById('expirationTime').textContent = 'Expires in: ' + expiresInMinutes.toString();
         }
       }
     }
@@ -58,6 +60,8 @@
     // So no need to decode the token to get its actual expiration
     record.value.stsTokenManager.expirationTime = Date.now() + 3600000;
     firebaseLocalStorage.put(record);
-    document.cookie = `${firbaseCookie}=${idToken}; path=/; SameSite=Strict`;
+    let date = new Date();
+    let expires = date.setTime(date.getTime() + (sessionSlidingTimeoutMinutes * 60 * 1000));
+    document.cookie = `${firbaseCookie}=${idToken}; path=/; samesite=strict; secure=True; expires=${expires}`;
   }
 }).call(this)
