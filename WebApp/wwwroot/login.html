@@ -2,24 +2,26 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Sample FirebaseUI App</title>
-  <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase.js"></script>
+  <title>Concepto - Login</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10/firebase-auth.js"></script>
   <script>
     var config = {
       apiKey: "AIzaSyCfNvnpm7ji0P4PXMD0Cfjed7PJ1r_BlmM",
       authDomain: "utility-descent-185119.firebaseapp.com",
     };
     firebase.initializeApp(config);
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
   </script>
-  <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+  <script src="https://www.gstatic.com/firebasejs/ui/5.0.0/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/5.0.0/firebase-ui-auth.css" />
   <script type="text/javascript">
     // FirebaseUI config.
     var uiConfig = {
       callbacks: {
         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
           authResult.user.getIdToken().then(function (idToken) {
-            document.cookie = `firebaseAccessToken=${idToken}; path=/; SameSite=Strict`;
+            document.cookie = `firebaseAccessToken=${idToken}; path=/; samesite=strict; secure=true;`;
             window.location.href = '/';
           });
 
@@ -51,6 +53,7 @@
     };
 
     // Initialize the FirebaseUI Widget using Firebase.
+    // .setPersistence(firebase.auth.Auth.Persistence.SESSION)
     var ui = new firebaseui.auth.AuthUI(firebase.auth());
     // The start method will wait until the DOM is loaded.
     ui.start('#firebaseui-auth-container', uiConfig);
