@@ -6,14 +6,12 @@
   <script src="https://www.gstatic.com/firebasejs/8.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10/firebase-auth.js"></script>
   <script>
-    const firebaseCookie = 'firebaseAccessToken';
     var config = {
       apiKey: "AIzaSyCfNvnpm7ji0P4PXMD0Cfjed7PJ1r_BlmM",
       authDomain: "utility-descent-185119.firebaseapp.com",
     };
     firebase.initializeApp(config);
     firebase.auth().signOut().then(() => {
-      document.cookie = `${firebaseCookie}=;max-age=0`;
       document.getElementById('logoutStatus').textContent = "Logout successful";
     }).catch((error) => {
       document.getElementById('logoutStatus').textContent = "Error logging out";
