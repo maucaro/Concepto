@@ -8,7 +8,6 @@ let config = {
 
 // Initialize the Firebase app in the service worker script.
 firebase.initializeApp(config);
-//firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
 /**
  * Returns a promise that resolves with an ID token if available.
