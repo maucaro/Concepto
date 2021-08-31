@@ -11,26 +11,12 @@
       authDomain: "utility-descent-185119.firebaseapp.com",
     };
     firebase.initializeApp(config);
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
   </script>
   <script src="https://www.gstatic.com/firebasejs/ui/5.0.0/firebase-ui-auth.js"></script>
   <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/5.0.0/firebase-ui-auth.css" />
   <script type="text/javascript">
     // FirebaseUI config.
     var uiConfig = {
-      callbacks: {
-        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-          authResult.user.getIdToken().then(function (idToken) {
-            document.cookie = `firebaseAccessToken=${idToken}; path=/; samesite=strict; secure=true;`;
-            window.location.href = '/';
-          });
-
-          // Do something with the returned AuthResult.
-          // Return type determines whether we continue the redirect
-          // automatically or whether we leave that to developer to handle.
-          return false;
-        }
-      },
       signInSuccessUrl: '/',
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
@@ -53,10 +39,14 @@
     };
 
     // Initialize the FirebaseUI Widget using Firebase.
-    // .setPersistence(firebase.auth.Auth.Persistence.SESSION)
     var ui = new firebaseui.auth.AuthUI(firebase.auth());
     // The start method will wait until the DOM is loaded.
     ui.start('#firebaseui-auth-container', uiConfig);
+
+    // Install servicerWorker if supported on sign-in/sign-up page.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/swsessions.js', { scope: '/' });
+    }
   </script>
 </head>
 <body>

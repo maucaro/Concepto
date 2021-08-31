@@ -27,7 +27,6 @@ namespace Vida.Prueba.WebApp
       string authority = Configuration.GetSection("JwtOptions").GetValue<string>("Authority");
       string issuer = Configuration.GetSection("JwtOptions").GetValue<string>("Issuer");
       string audience = Configuration.GetSection("JwtOptions").GetValue<string>("Audience");
-      string tokenCookie = Configuration.GetSection("JwtOptions").GetValue<string>("TokenCookie");
       services.AddRazorPages();
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
@@ -44,17 +43,6 @@ namespace Vida.Prueba.WebApp
           ValidateAudience = true,
           ValidAudience = audience,
           ValidateLifetime = true
-        };
-        options.Events = new JwtBearerEvents
-        {
-          OnMessageReceived = context =>
-          {
-            if (!String.IsNullOrWhiteSpace(context.Request.Cookies[tokenCookie]))
-            {
-              context.Token = context.Request.Cookies[tokenCookie];
-             }
-            return Task.CompletedTask;
-          }
         };
       });
     }
