@@ -1,10 +1,6 @@
 importScripts('//www.gstatic.com/firebasejs/8.10/firebase-app.js')
 importScripts('//www.gstatic.com/firebasejs/8.10/firebase-auth.js');
-
-let config = {
-  apiKey: "AIzaSyCfNvnpm7ji0P4PXMD0Cfjed7PJ1r_BlmM",
-  authDomain: "utility-descent-185119.firebaseapp.com",
-};
+importScripts('/js/firebaseconfig.js');
 
 // Initialize the Firebase app in the service worker script.
 firebase.initializeApp(config);

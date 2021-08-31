@@ -5,17 +5,14 @@
   <title>Concepto - Logout</title>
   <script src="https://www.gstatic.com/firebasejs/8.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10/firebase-auth.js"></script>
+  <script src="/js/firebaseconfig.js"></script>
   <script>
-    var config = {
-      apiKey: "AIzaSyCfNvnpm7ji0P4PXMD0Cfjed7PJ1r_BlmM",
-      authDomain: "utility-descent-185119.firebaseapp.com",
-    };
-    firebase.initializeApp(config);
-    firebase.auth().signOut().then(() => {
-      document.getElementById('logoutStatus').textContent = "Logout successful";
-    }).catch((error) => {
-      document.getElementById('logoutStatus').textContent = "Error logging out";
-    });
+  firebase.initializeApp(config);
+  firebase.auth().signOut().then(() => {
+    document.getElementById('logoutStatus').textContent = "Logout successful";
+  }).catch((error) => {
+    document.getElementById('logoutStatus').textContent = "Error logging out";
+  });
   </script>
 </head>
 <body>
