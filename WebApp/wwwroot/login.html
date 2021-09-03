@@ -20,8 +20,15 @@
         {
           provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
           disableSignUp: { status: true }
-        }
-      ],
+        },
+        {
+          provider: 'saml.concepto',
+          providerName: 'maucaro.com',
+          // To override the full label of the button.
+          // fullLabel: 'Constractor Portal',
+          buttonColor: '#6699CC',
+          iconUrl: '/icons8-login-64.png'
+        }      ],
       // tosUrl and privacyPolicyUrl accept either url string or a callback
       // function.
       // Terms of service url/callback.

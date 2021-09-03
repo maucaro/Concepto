@@ -63,7 +63,6 @@ namespace Vida.Prueba.WebApp
         app.UseHsts();
       }
 
-      app.UseHttpsRedirection();
       app.UseStaticFiles();
       app.UseStatusCodePages(context =>
       {
