@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Threading.Tasks;
+using Vida.Prueba.Authentication;
 
 namespace Vida.Prueba.WebApp
 {
@@ -24,26 +23,17 @@ namespace Vida.Prueba.WebApp
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      string authority = Configuration.GetSection("JwtOptions").GetValue<string>("Authority");
-      string issuer = Configuration.GetSection("JwtOptions").GetValue<string>("Issuer");
-      string audience = Configuration.GetSection("JwtOptions").GetValue<string>("Audience");
       services.AddRazorPages();
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
       services.AddAuthorization();
       services
-      .AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
-      .AddJwtBearer(options =>
+      .AddAuthentication(options => { options.DefaultScheme = CustomAuthenticationDefaults.AuthenticationScheme; })
+      .AddCustomAuth(options =>
       {
-        options.Authority = authority;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-          ValidateIssuer = true,
-          ValidIssuer = issuer,
-          ValidateAudience = true,
-          ValidAudience = audience,
-          ValidateLifetime = true
-        };
+        SignedTokenVerificationOptions tokenOptions = new();
+        Configuration.GetSection("AuthOptions").Bind(tokenOptions);
+        options.TokenVerificationOptions = tokenOptions;
       });
     }
 
@@ -59,8 +49,6 @@ namespace Vida.Prueba.WebApp
       else
       {
         app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
       }
 
       app.UseStaticFiles();
