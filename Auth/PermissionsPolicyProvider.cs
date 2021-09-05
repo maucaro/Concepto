@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 
-namespace Vida.Prueba.WebApp
+namespace Vida.Prueba.Auth
 {
   public class PermissionsPolicyProvider : DefaultAuthorizationPolicyProvider
   {

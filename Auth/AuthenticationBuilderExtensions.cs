@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Authentication;
 
-namespace Vida.Prueba.Authentication
+namespace Vida.Prueba.Auth
 {
     public static class AuthenticationBuilderExtensions
     {

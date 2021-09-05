@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 
-namespace Vida.Prueba.WebApp
+namespace Vida.Prueba.Auth
 {
   public class HasPermission : IAuthorizationRequirement
   {

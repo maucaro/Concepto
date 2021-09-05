@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>Vida.Prueba.Authentication</RootNamespace>
+    <RootNamespace>Vida.Prueba.Auth</RootNamespace>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Auth" Version="1.54.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 
 </Project>

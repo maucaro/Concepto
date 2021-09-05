@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace Vida.Prueba.WebApp
+namespace Vida.Prueba.Auth
 {
   public class PermissionHandler : AuthorizationHandler<HasPermission>
   {
