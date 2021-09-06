@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{15e10dba-6abc-47cb-b8bb-d5d1e2441a36}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -71,5 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Snapshots\DbUsers_20210820_13-39-58.dacpac" />
+    <None Include="Dockerfile" />
+    <None Include="Data.sql" />
+    <None Include="DbUsers.publish.xml" />
   </ItemGroup>
 </Project>

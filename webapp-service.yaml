@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+    cloud.google.com/neg-status: '{"network_endpoint_groups":{"8080":"k8s1-db9272b4-default-webapp-service-8080-88f2bccc"},"zones":["us-west2-b","us-west2-c"]}'
+  labels:
+    app: webapp
+  name: webapp-service
+  namespace: concepto
+spec:
+  clusterIP: 10.91.3.162
+  clusterIPs:
+  - 10.91.3.162
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 30557
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: webapp
+  sessionAffinity: None
+  type: NodePort

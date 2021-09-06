@@ -5,6 +5,7 @@
     <UserSecretsId>eebcb6d2-07b3-438d-9f18-796a925c41e2</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <RootNamespace>Vida.Prueba.WebApp</RootNamespace>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
