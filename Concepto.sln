@@ -19,6 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth", "Auth\Auth.csproj", 
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2DB464E6-40EC-4B1C-9DA2-257352965768}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D9792403-27DF-46F5-B614-FA9ACCC8467F}"
+	ProjectSection(SolutionItems) = preProject
+		Deploy\build-deploy-db.ps1 = Deploy\build-deploy-db.ps1
+		Deploy\db.yaml = Deploy\db.yaml
+		Deploy\webapp.yaml = Deploy\webapp.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

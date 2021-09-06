@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbsql
+  namespace: concepto
+spec:
+  selector:
+    matchLabels:
+      app: concepto
+      tier: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: concepto
+        tier: db
+    spec:
+      containers:
+      - image: us-west2-docker.pkg.dev/utility-descent-185119/webapp-repo/dbsql:dev
+        name: dbsql
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 1433
+          name: sqlserver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbsql
+  namespace: concepto
+spec:
+  clusterIP: None
+  ports:
+  - port: 1433
+    protocol: TCP
+    targetPort: 1433
+  selector:
+    app: concepto
+    tier: db
+  sessionAffinity: None
+  type: ClusterIP
