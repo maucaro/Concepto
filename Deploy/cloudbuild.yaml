@@ -8,8 +8,7 @@ steps:
   - 'pipefail'
   - '-c'
   - |-
-    DIGEST=${_DIGEST}
-    REPLACE=$(printf '%s\n' "$DIGEST" | sed -e 's/[\/&]/\\&/g')
+    REPLACE=$(printf '%s\n' "${_DIGEST}" | sed -e 's/[\/&]/\\&/g')
     sed -i "0,/^\([[:space:]]*image: *\).*/s//\1$REPLACE/;" webapp.yaml
   # deploy container image to GKE
 - name: "gcr.io/cloud-builders/gke-deploy"
