@@ -1,9 +1,17 @@
 steps:
 - name: gcr.io/cloud-builders/git
   args: ['fetch']
-- name: 'bash'
-  args: ['sed', '-i "0,/^\([[:space:]]*image: *\).*/s//\1${_DIGEST}/;" Deploy/webapp.yaml']
-# deploy container image to GKE
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-eEuo'
+  - 'pipefail'
+  - '-c'
+  - |-
+    DIGEST=${_DIGEST}
+    REPLACE=$(printf '%s\n' "$DIGEST" | sed -e 's/[\/&]/\\&/g')
+    sed -i "0,/^\([[:space:]]*image: *\).*/s//\1$REPLACE/;" webapp.yaml
+  # deploy container image to GKE
 - name: "gcr.io/cloud-builders/gke-deploy"
   args:
   - run
