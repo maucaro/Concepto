@@ -22,6 +22,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D9792403-27DF-46F5-B614-FA9ACCC8467F}"
 	ProjectSection(SolutionItems) = preProject
 		Deploy\build-deploy-db.ps1 = Deploy\build-deploy-db.ps1
+		Deploy\build-push-webapp.ps1 = Deploy\build-push-webapp.ps1
 		Deploy\cloudbuild.yaml = Deploy\cloudbuild.yaml
 		Deploy\db.yaml = Deploy\db.yaml
 		Deploy\ingress.yaml = Deploy\ingress.yaml
