@@ -1,6 +1,10 @@
 steps:
 - name: gcr.io/cloud-builders/git
   args: ['fetch']
+- name: 'bash'
+  args: ['sed', 'sed -i "0,/^\([[:space:]]*image: *\).*/s//\1${_DIGEST}/;" webapp.yaml']
+  substitutions:
+    _DIGEST: none # default value
 # deploy container image to GKE
 - name: "gcr.io/cloud-builders/gke-deploy"
   args:
