@@ -19,7 +19,6 @@ spec:
       containers:
       - image: us-west2-docker.pkg.dev/utility-descent-185119/webapp-repo/dbsql:dev
         name: dbsql
-        imagePullPolicy: Always
         ports:
         - containerPort: 1433
           name: sqlserver

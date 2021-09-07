@@ -23,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D97924
 	ProjectSection(SolutionItems) = preProject
 		Deploy\build-deploy-db.ps1 = Deploy\build-deploy-db.ps1
 		Deploy\db.yaml = Deploy\db.yaml
+		Deploy\webapp-service.yaml = Deploy\webapp-service.yaml
 		Deploy\webapp.yaml = Deploy\webapp.yaml
 	EndProjectSection
 EndProject
