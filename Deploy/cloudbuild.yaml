@@ -3,8 +3,6 @@ steps:
   args: ['fetch']
 - name: 'bash'
   args: ['sed', 'sed -i "0,/^\([[:space:]]*image: *\).*/s//\1${_DIGEST}/;" Deploy/webapp.yaml']
-  substitutions:
-    _DIGEST: none # default value
 # deploy container image to GKE
 - name: "gcr.io/cloud-builders/gke-deploy"
   args:
@@ -12,3 +10,5 @@ steps:
   - --filename=Deploy/webapp.yaml
   - --location=us-west2
   - --cluster=autopilot-cluster-eshop
+substitutions:
+  _DIGEST: none # default value
