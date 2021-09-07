@@ -29,6 +29,7 @@ spec:
           value: Server=dbsql;Database=DbUsers;User Id=sa;Password=P@ssw0rd
         image: us-west2-docker.pkg.dev/utility-descent-185119/webapp-repo/webapp:dev
         imagePullPolicy: IfNotPresent
+        name: webapp
         resources:
           limits:
             cpu: 500m
