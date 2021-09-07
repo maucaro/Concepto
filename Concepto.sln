@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D97924
 		Deploy\cloudbuild.yaml = Deploy\cloudbuild.yaml
 		Deploy\db.yaml = Deploy\db.yaml
 		Deploy\ingress.yaml = Deploy\ingress.yaml
+		Deploy\replace.sh = Deploy\replace.sh
 		Deploy\vida-managedcert.yaml = Deploy\vida-managedcert.yaml
 		Deploy\webapp-service.yaml = Deploy\webapp-service.yaml
 		Deploy\webapp.yaml = Deploy\webapp.yaml
