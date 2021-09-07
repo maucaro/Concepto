@@ -3,11 +3,11 @@ steps:
   args: ['fetch']
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
-  args: ['Deploy/replace.sh','${_DIGEST}', 'Deploy/webapp.yaml']
+  args: ['Deploy/replace.sh','${_DIGEST}', '${_FILE}']
 - name: "gcr.io/cloud-builders/gke-deploy"
   args:
   - run
-  - --filename=Deploy/webapp.yaml
+  - --filename=${FILE}
   - --location=us-west2
   - --cluster=autopilot-cluster-eshop
 substitutions:
