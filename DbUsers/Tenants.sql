@@ -1,0 +1,5 @@
+CREATE TABLE [dbo].[Tenants]
+(
+	[Id] NVARCHAR(20) NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(50) NOT NULL
+)
