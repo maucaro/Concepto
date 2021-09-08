@@ -13,7 +13,7 @@ trigger:
 variables:
   TargetFramework: 'net5.0'
   BuildConfiguration: 'Release'
-  DockerImageName: 'webapp-repo/webapp'
+  DockerImageName: 'utility-descent-185119/webapp-repo/webapp'
 steps:
 - task: DotNetCoreCLI@2
   displayName: Publish
