@@ -7,7 +7,7 @@ steps:
 - name: "gcr.io/cloud-builders/gke-deploy"
   args:
   - run
-  - --filename=${FILE}
+  - --filename=${_FILE}
   - --location=us-west2
   - --cluster=autopilot-cluster-eshop
 substitutions:
