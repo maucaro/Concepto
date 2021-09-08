@@ -2,7 +2,7 @@ resources:
 - repo: self
   fetchDepth: 1
 pool:
-  vmImage: ubuntu-16.04
+  vmImage: ubuntu-latest
 trigger:
   branches:
     include:
@@ -13,7 +13,7 @@ trigger:
 variables:
   TargetFramework: 'net5.0'
   BuildConfiguration: 'Release'
-  DockerImageName: 'us-west2-docker.pkg.dev/utility-descent-185119/webapp-repo/webapp:dev'
+  DockerImageName: 'us-west2-docker.pkg.dev/utility-descent-185119/webapp-repo/webapp'
 steps:
 - task: DotNetCoreCLI@2
   displayName: Publish
@@ -35,3 +35,5 @@ steps:
     Dockerfile: 'WebApp/Dockerfile'
     command: buildAndPush
     repository: '$(DockerImageName)'
+    tags: |
+      dev
