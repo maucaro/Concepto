@@ -35,5 +35,6 @@ steps:
     Dockerfile: '$(Build.SourcesDirectory)/WebApp/Dockerfile'
     command: buildAndPush
     repository: '$(DockerImageName)'
+    buildContext: '$(Build.SourcesDirectory)'
     tags: |
       dev
