@@ -13,10 +13,12 @@ namespace Vida.Prueba.Auth
 {
   public class PermissionHandler : AuthorizationHandler<HasPermission>
   {
+    private const string TenantClaim = "tenant";
     private readonly ILogger _logger;
-    private Dictionary<string, HashSet<string>> _permissionRoles;
+    private Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles;
     private readonly string _connectionString;
     private readonly string _storedProcedure;
+    private readonly string _tenantField;
     private readonly string _permissionField;
     private readonly string _roleField;
     private readonly Timer _timer;
@@ -28,6 +30,7 @@ namespace Vida.Prueba.Auth
       _logger = logger;
       _connectionString = configuration.GetSection("DbUsers").GetValue<string>("ConnectionString");
       _storedProcedure = configuration.GetSection("DbUsers").GetValue<string>("PermissionRolesSP");
+      _tenantField = configuration.GetSection("DbUsers").GetValue<string>("TenantField");
       _permissionField = configuration.GetSection("DbUsers").GetValue<string>("PermissionField");
       _roleField = configuration.GetSection("DbUsers").GetValue<string>("RoleField");
       _intervalSeconds = configuration.GetSection("DbUsers").GetValue<int>("IntervalSeconds");
@@ -48,7 +51,7 @@ namespace Vida.Prueba.Auth
 
     private void UpdatePermissionRoles()
     {
-      Dictionary<string, HashSet<string>> permissionRoles = new();
+      Dictionary<string, Dictionary<string, HashSet<string>>> permissionRoles = new();
       using (SqlConnection connection = new(_connectionString))
       {
         connection.Open();
@@ -63,40 +66,52 @@ namespace Vida.Prueba.Auth
           {
             while (reader.Read())
             {
+              var tenant = (string)reader[_tenantField] ?? String.Empty;
               var permission = (string)reader[_permissionField];
               var role = (string)reader[_roleField];
-              if (permissionRoles.ContainsKey(permission))
+              Dictionary<string, HashSet<string>> permissionRolesTenant;
+              if (!permissionRoles.ContainsKey(tenant))
               {
-                permissionRoles.GetValueOrDefault(permission).Add(role);
+                permissionRolesTenant = new();
+                permissionRoles.Add(tenant, permissionRolesTenant);
+              }
+              else
+              {
+                permissionRolesTenant = permissionRoles.GetValueOrDefault(tenant);
+              }
+              if (permissionRolesTenant.ContainsKey(permission))
+              {
+                permissionRolesTenant.GetValueOrDefault(permission).Add(role);
               }
               else
               {
                 HashSet<string> roles = new() { role };
-                permissionRoles.Add(permission, roles);
+                permissionRolesTenant.Add(permission, roles);
               }
 
             }
           }
           reader.Close();
+          _logger.LogInformation("Permissions and Roles refreshed");
+          _permissionRoles = permissionRoles;
         }
         catch (Exception ex)
         {
           _logger.LogError(ex, "Error refreshing permissions and roles");
         }
       }
-      _logger.LogInformation("Permissions and Roles refreshed");
-      _permissionRoles = permissionRoles;
     }
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasPermission requirement)
     {
-      if (_permissionRoles.ContainsKey(requirement.Permission) && context.User.Claims.Any())
+      string tenant = context.User.Claims.Where(c => c.Type == TenantClaim).Select(c => c.Value).FirstOrDefault();
+      if (_permissionRoles.ContainsKey(tenant) && context.User.Claims.Any())
       {
-        HashSet<string> permissionRoles = _permissionRoles.GetValueOrDefault(requirement.Permission);
+        HashSet<string> permissionRoles = _permissionRoles.GetValueOrDefault(tenant).GetValueOrDefault(requirement.Permission);
         HashSet<string> userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToHashSet();
         if (permissionRoles.Overlaps(userRoles))
-        { 
-            context.Succeed(requirement);
+        {
+          context.Succeed(requirement);
         }
       }
       return Task.CompletedTask;

@@ -1,3 +1,9 @@
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +13,12 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Google.Apis.Auth;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Vida.Prueba.Auth
 {
   public class ValidateAuthenticationHandler : AuthenticationHandler<ValidateAuthenticationSchemeOptions>
   {
+    private const string TenantClaim = "tenant";
     public ValidateAuthenticationHandler(
         IOptionsMonitor<ValidateAuthenticationSchemeOptions> options,
         ILoggerFactory logger,
@@ -26,7 +28,7 @@ namespace Vida.Prueba.Auth
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-      if (!Request.Headers.ContainsKey("Authorization"))
+      if (!Request.Headers.ContainsKey(HeaderNames.Authorization))
       {
         return AuthenticateResult.Fail("Authorization header missing");
       }
@@ -48,9 +50,13 @@ namespace Vida.Prueba.Auth
         {
           return AuthenticateResult.Fail("Error validating token: 'sub' and 'email' claims are required");
         }
-        List<Claim> claims = new() {
-                    new Claim(ClaimTypes.NameIdentifier, tokenClaims.Sub),
-                    new Claim(ClaimTypes.Email, tokenClaims.Email)};
+        List<Claim> claims = new()
+        {
+          new Claim(ClaimTypes.NameIdentifier, tokenClaims.Sub),
+          new Claim(ClaimTypes.Email, tokenClaims.Email),
+          new Claim(TenantClaim, tokenClaims.Firebase.Tenant)
+        };
+
         foreach (string role in tokenClaims.Roles)
         {
           claims.Add(new Claim(ClaimTypes.Role, role));
@@ -110,6 +116,16 @@ namespace Vida.Prueba.Auth
 
       [JsonPropertyName("roles")]
       public List<string> Roles { get; set; }
+
+      [JsonPropertyName("firebase")]
+      public FirbaseClaim Firebase { get; set; }
+
+    }
+
+    private class FirbaseClaim
+    {
+      [JsonPropertyName("tenant")]
+      public string Tenant { get; set; }
     }
   }
 }
