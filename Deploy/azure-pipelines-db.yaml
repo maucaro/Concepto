@@ -33,6 +33,6 @@ steps:
     Dockerfile: '$(Build.SourcesDirectory)/DbUsers/Dockerfile'
     command: buildAndPush
     repository: '$(DockerImageName)'
-    buildContext: '$(Build.SourcesDirectory)'
+    buildContext: '$(Build.SourcesDirectory)/DbUsers'
     tags: |
       dev
