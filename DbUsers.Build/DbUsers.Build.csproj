@@ -6,4 +6,8 @@
   <ItemGroup>
     <Content Include="..\DbUsers\Dbo\**\*.sql" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(ProjectDir)bin\Debug\netstandard2.0\DbUsers.Build.dacpac" DestinationFolder="$(ProjectDir)" 
+    />
+  </Target>
 </Project>
