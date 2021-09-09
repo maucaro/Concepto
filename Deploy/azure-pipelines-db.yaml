@@ -2,7 +2,7 @@ resources:
 - repo: self
   fetchDepth: 1
 pool:
-  vmImage: windows-latest
+  vmImage: ubuntu-latest
 trigger:
   branches:
     include:
@@ -11,14 +11,17 @@ trigger:
     include:
     - DbUsers
 variables:
-  TargetFramework: 'net5.0'
+  TargetFramework: 'netstandard2.0'
   BuildConfiguration: 'Release'
   DockerImageName: 'utility-descent-185119/webapp-repo/dbsql'
 steps:
-- task: MSBuild@1
-  displayName: Publish
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    solution: 'DbUsers/DbUsers.sqlproj'
+    projects: 'DbUsers.Build/DbUsers.Build'
+    command: build
+    arguments: '--configuration $(BuildConfiguration) --framework=$(TargetFramework)'
+    modifyOutputPath: false
 - task: Docker@2
   displayName: 'Login to Container Registry'
   inputs:
