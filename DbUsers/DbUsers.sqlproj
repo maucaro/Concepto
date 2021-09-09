@@ -59,13 +59,13 @@
     <Folder Include="Snapshots" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Roles.sql" />
-    <Build Include="Permissions.sql" />
-    <Build Include="RolePermissions.sql" />
     <Build Include="dbo\Stored Procedures\GetAllPermissionRoles.sql" />
-    <Build Include="Tenants.sql" />
+    <Build Include="dbo\Tables\Permissions.sql" />
+    <Build Include="dbo\Tables\RolePermissions.sql" />
+    <Build Include="dbo\Tables\Roles.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DbUsers.refactorlog" />
@@ -75,5 +75,8 @@
     <None Include="Dockerfile" />
     <None Include="Data.sql" />
     <None Include="DbUsers.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\Tenants.sql" />
   </ItemGroup>
 </Project>
