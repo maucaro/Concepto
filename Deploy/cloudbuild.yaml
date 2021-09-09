@@ -12,3 +12,4 @@ steps:
   - --cluster=autopilot-cluster-eshop
 substitutions:
   _DIGEST: none # default value
+  _FILE: none
