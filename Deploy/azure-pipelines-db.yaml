@@ -2,7 +2,7 @@ resources:
 - repo: self
   fetchDepth: 1
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 trigger:
   branches:
     include:
