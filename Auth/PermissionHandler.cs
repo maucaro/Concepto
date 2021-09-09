@@ -15,7 +15,7 @@ namespace Vida.Prueba.Auth
   {
     private const string TenantClaim = "tenant";
     private readonly ILogger _logger;
-    private Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles;
+    private Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles = new();
     private readonly string _connectionString;
     private readonly string _storedProcedure;
     private readonly string _tenantField;
