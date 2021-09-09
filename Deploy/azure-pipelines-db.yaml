@@ -12,7 +12,7 @@ trigger:
     - DbUsers
 variables:
   TargetFramework: 'netstandard2.0'
-  BuildConfiguration: 'Release'
+  BuildConfiguration: 'Debug'
   DockerImageName: 'utility-descent-185119/webapp-repo/dbsql'
 steps:
 - task: DotNetCoreCLI@2
