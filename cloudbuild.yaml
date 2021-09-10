@@ -1,0 +1,4 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'us-west2-docker.pkg.dev/utility-descent-185119/webapp-repo/db-cloudbuild', '-f', 'DbUsers/Dockerfile', '.' ]
+images: ['us-west2-docker.pkg.dev/utility-descent-185119/webapp-repo/db-cloudbuild']
