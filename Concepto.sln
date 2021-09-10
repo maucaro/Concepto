@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D97924
 		Deploy\azure-pipelines-webapp.yaml = Deploy\azure-pipelines-webapp.yaml
 		Deploy\build-push-db.ps1 = Deploy\build-push-db.ps1
 		Deploy\build-push-webapp.ps1 = Deploy\build-push-webapp.ps1
+		cloudbuild-build-db.yaml = cloudbuild-build-db.yaml
 		Deploy\cloudbuild.yaml = Deploy\cloudbuild.yaml
 		Deploy\db.yaml = Deploy\db.yaml
 		Deploy\ingress.yaml = Deploy\ingress.yaml
@@ -34,7 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D97924
 		Deploy\webapp.yaml = Deploy\webapp.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUsers.Build", "DbUsers.Build\DbUsers.Build.csproj", "{F1A278A9-EEC6-4318-A50C-C048D9E376BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbUsers.Build", "DbUsers.Build\DbUsers.Build.csproj", "{F1A278A9-EEC6-4318-A50C-C048D9E376BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
