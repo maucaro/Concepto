@@ -47,7 +47,8 @@ namespace Vida.Prueba.Auth
         List<Claim> claims = new()
         {
           new Claim(ClaimTypes.NameIdentifier, tokenClaims.Sub),
-          new Claim(ClaimTypes.Email, tokenClaims.Email)
+          new Claim(ClaimTypes.Email, tokenClaims.Email),
+          new Claim(TenantClaim, tokenClaims.Firebase.Tenant)
         };
         
         foreach (string role in tokenClaims.Roles)
