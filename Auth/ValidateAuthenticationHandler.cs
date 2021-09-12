@@ -39,13 +39,7 @@ namespace Vida.Prueba.Auth
       }
       try
       {
-        // Payload returned by JsonWebSignature.VerifySignedTokenAsync does not include the email claim.
-        // Bug filed: https://github.com/googleapis/google-api-dotnet-client/issues/1878
-        // In the meantime, will decode and deserialize it manually.
-        // JsonWebSignature.Payload payload = await JsonWebSignature.VerifySignedTokenAsync(token, Options.TokenVerificationOptions);
-        var generalValidationTask = JsonWebSignature.VerifySignedTokenAsync(rawToken, Options.TokenVerificationOptions);
-        var payload = rawToken.Split('.').ElementAtOrDefault(1);    // A token has the form 'header.payload.signature'
-        TokenClaims tokenClaims = JsonSerializer.Deserialize<TokenClaims>(Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(payload)));
+        TokenClaims tokenClaims = await JsonWebSignature.VerifySignedTokenAsync<TokenClaims>(rawToken, Options.TokenVerificationOptions);
         if (string.IsNullOrWhiteSpace(tokenClaims.Sub) || string.IsNullOrWhiteSpace(tokenClaims.Email))
         {
           return AuthenticateResult.Fail("Error validating token: 'sub' and 'email' claims are required");
@@ -53,30 +47,24 @@ namespace Vida.Prueba.Auth
         List<Claim> claims = new()
         {
           new Claim(ClaimTypes.NameIdentifier, tokenClaims.Sub),
-          new Claim(ClaimTypes.Email, tokenClaims.Email),
-          new Claim(TenantClaim, tokenClaims.Firebase.Tenant)
+          new Claim(ClaimTypes.Email, tokenClaims.Email)
         };
-
+        
         foreach (string role in tokenClaims.Roles)
         {
           claims.Add(new Claim(ClaimTypes.Role, role));
         }
         var claimsIdentity = new ClaimsIdentity(claims, nameof(ValidateAuthenticationHandler));
         var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), this.Scheme.Name);
-        await generalValidationTask.ConfigureAwait(false);
         return AuthenticateResult.Success(ticket);
+      }
+      catch (InvalidJwtException ex)
+      {
+        return AuthenticateResult.Fail($"Error validating token: {ex.Message}");
       }
       catch (Exception ex)
       {
-        return ex switch
-        {
-          // Payload decoding failed - malformed input (i.e. whitespace or padding characters)
-          FormatException or ArgumentNullException => AuthenticateResult.Fail("Error validating token: payload decoding failed"),
-          // Payload failed to serialize to JSON
-          JsonException => AuthenticateResult.Fail("Error validating token: converting payload to JSON failed"),
-          // Token failed verification
-          _ => AuthenticateResult.Fail($"Error validating token: ${ex.Message}"),
-        };
+        return AuthenticateResult.Fail($"Error during token validation: {ex.Message}");
       }
     }
 
@@ -100,13 +88,14 @@ namespace Vida.Prueba.Auth
       return token;
     }
 
-    private class TokenClaims
+    private class TokenClaims : JsonWebSignature.Payload
     {
-      public TokenClaims(string sub, string email, List<string> roles)
+      public TokenClaims(string sub, string email, List<string> roles, FirbaseClaim firebase)
       {
         Sub = sub;
         Email = email;
         Roles = !(roles == null) ? roles : new List<string>();
+        Firebase = !(firebase == null) ? firebase : new FirbaseClaim();
       }
       [JsonPropertyName("sub")]
       public string Sub { get; set; }
@@ -124,6 +113,10 @@ namespace Vida.Prueba.Auth
 
     private class FirbaseClaim
     {
+      public FirbaseClaim(string tenant = "")
+      {
+        Tenant = !(String.IsNullOrWhiteSpace(tenant)) ? tenant : String.Empty;
+      }
       [JsonPropertyName("tenant")]
       public string Tenant { get; set; }
     }
