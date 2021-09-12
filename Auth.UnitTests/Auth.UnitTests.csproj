@@ -34,7 +34,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Target Name="GenerateTokens" AfterTargets="PostBuildEvent">
+  <Target Name="GenerateTokens" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug' ">
     <Exec Command="powershell.exe $(TargetDir)gen-jwt\generate-tokens.ps1 $(TargetDir)gen-jwt" ConsoleToMsBuild="true"/>
   </Target>
   
