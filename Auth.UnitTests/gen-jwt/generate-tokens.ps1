@@ -7,22 +7,22 @@ $PYTHON_FILE = $FILES_PATH+"\gen-jwt.py"
 $PEM_FILE = $FILES_PATH+"\key.pem"
 
 #Good token
-c:\python39\python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $PEM_FILE > $FILES_PATH\token
+python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $PEM_FILE > $FILES_PATH\token
 
 #Wrong audience
-c:\python39\python.exe $PYTHON_FILE -iss foo.bar -aud wrongaud -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $PEM_FILE > $FILES_PATH\token_wrong_aud
+python.exe $PYTHON_FILE -iss foo.bar -aud wrongaud -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $PEM_FILE > $FILES_PATH\token_wrong_aud
 
 #Expired token
-c:\python39\python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire -100000 $PEM_FILE > $FILES_PATH\token_expired
+python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire -100000 $PEM_FILE > $FILES_PATH\token_expired
 
 #Wrong Key
-c:\python39\python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $FILES_PATH\wrongkey.pem > $FILES_PATH\token_wrong_key
+python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $FILES_PATH\wrongkey.pem > $FILES_PATH\token_wrong_key
 
 #No email
-c:\python39\python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $PEM_FILE > $FILES_PATH\token_no_email
+python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $PEM_FILE > $FILES_PATH\token_no_email
 
 #No tenant
-c:\python39\python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -expire 100000 $PEM_FILE > $FILES_PATH\token_no_tenant
+python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -expire 100000 $PEM_FILE > $FILES_PATH\token_no_tenant
 
 
 # SIG # Begin signature block
