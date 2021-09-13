@@ -55,6 +55,6 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '**/TEST-*.xml'
-    buildPlatform: '$(buildPlatform)'
-    buildConfiguration: '$(buildConfiguration)'
+    testResultsFiles: '**/TestResults/*.trx'
+    searchFolder: '/'
+
