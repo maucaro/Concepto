@@ -19,11 +19,8 @@ steps:
   displayName: Build
   inputs:
     projects: '$(project)'
-    publishWebProjects: false
     command: build
     arguments: '--configuration $(BuildConfiguration) --framework=$(TargetFramework)'
-    zipAfterPublish: false
-    modifyOutputPath: false
 
 - task: UsePythonVersion@0
   inputs:
