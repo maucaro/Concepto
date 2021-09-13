@@ -10,23 +10,20 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
+  project: 'Auth.UnitTests\Auth.UnitTests.csproj'
+  TargetFramework: 'net5.0'
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
+  displayName: Publish
   inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    projects: '$(project)'
+    publishWebProjects: false
+    command: publish
+    arguments: '--configuration $(BuildConfiguration) --framework=$(TargetFramework)'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: UsePythonVersion@0
   inputs:
@@ -54,5 +51,7 @@ steps:
 
 - task: VSTest@2
   inputs:
+    testAssemblyVer2: '**\Auth.UnitTests.dll'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
