@@ -48,7 +48,9 @@ steps:
 
 - task: VSTest@2
   inputs:
-    testAssemblyVer2: '**\Auth.UnitTests.dll'
+    testAssemblyVer2: |
+     '**\Auth.UnitTests.dll'
+     '!**\bin\**\ref\**'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
