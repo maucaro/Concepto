@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -34,10 +35,11 @@ namespace Vida.Prueba.Auth.UnitTests
           .AddJsonFile($"appsettings.{_environmentName}.json", true, true)
           .Build();
       SignedTokenVerificationOptions tokenOptions = new();
-      configuration.GetSection("AuthOptions").Bind(tokenOptions);
-      tokenOptions.IssuedAtClockTolerance = TimeSpan.FromMinutes(1);
+      configuration.GetSection("AuthOptions:TokenVerificationOptions").Bind(tokenOptions);
       ValidateAuthenticationSchemeOptions options = new();
       options.TokenVerificationOptions = tokenOptions;
+      options.ValidTenants = configuration.GetSection("AuthOptions:ValidTenants").Get<List<string>>();
+
       _options = new Mock<IOptionsMonitor<ValidateAuthenticationSchemeOptions>>();
 
       // This Setup is required for .NET Core 3.1 onwards.
@@ -119,6 +121,13 @@ namespace Vida.Prueba.Auth.UnitTests
     {
       string token = ReadTokenFromFile("token_wrong_aud");
       await TestMiddleware_Fail("bearer " + token, "Error validating token: JWT contains untrusted 'aud' claim.");
+    }
+
+    [TestMethod]
+    public async Task Test_TokenWrongTenant()
+    {
+      string token = ReadTokenFromFile("token_wrong_tenant");
+      await TestMiddleware_Fail("bearer " + token, "Error validating token: JWT contains invalid 'tenant' claim.");
     }
 
     [TestMethod]

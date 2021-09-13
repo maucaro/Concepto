@@ -18,7 +18,6 @@ namespace Vida.Prueba.Auth
 {
   public class ValidateAuthenticationHandler : AuthenticationHandler<ValidateAuthenticationSchemeOptions>
   {
-    private const string TenantClaim = "tenant";
     public ValidateAuthenticationHandler(
         IOptionsMonitor<ValidateAuthenticationSchemeOptions> options,
         ILoggerFactory logger,
@@ -44,11 +43,15 @@ namespace Vida.Prueba.Auth
         {
           return AuthenticateResult.Fail("Error validating token: 'sub' and 'email' claims are required");
         }
+        if (!Options.ValidTenants.Contains(tokenClaims.Firebase.Tenant))
+        {
+          return AuthenticateResult.Fail("Error validating token: JWT contains invalid 'tenant' claim.");
+        }
         List<Claim> claims = new()
         {
           new Claim(ClaimTypes.NameIdentifier, tokenClaims.Sub),
           new Claim(ClaimTypes.Email, tokenClaims.Email),
-          new Claim(TenantClaim, tokenClaims.Firebase.Tenant)
+          new Claim(CustomAuthenticationDefaults.TenantClaim, tokenClaims.Firebase.Tenant)
         };
         
         foreach (string role in tokenClaims.Roles)

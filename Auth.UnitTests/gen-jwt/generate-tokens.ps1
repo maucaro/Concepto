@@ -12,6 +12,9 @@ python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SU
 #Wrong audience
 python.exe $PYTHON_FILE -iss foo.bar -aud wrongaud -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire 100000 $PEM_FILE > $FILES_PATH\token_wrong_aud
 
+#Wrong tenant
+python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant wrongtenant -expire 100000 $PEM_FILE > $FILES_PATH\token_wrong_tenant
+
 #Expired token
 python.exe $PYTHON_FILE -iss foo.bar -aud $AUDIENCE -claims=email:$EMAIL,sub:$SUB -nestedclaim firebase tenant $TENANT -expire -100000 $PEM_FILE > $FILES_PATH\token_expired
 
