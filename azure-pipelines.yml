@@ -51,10 +51,4 @@ steps:
     testAssemblyVer2: '$(System.DefaultWorkingDirectory)\Auth.UnitTests\bin\$(buildConfiguration)\$(TargetFramework)\Auth.UnitTests.dll'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**/TestResults/*.trx'
-    searchFolder: '/'
-
+    codeCoverageEnabled: true
