@@ -21,7 +21,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D9792403-27DF-46F5-B614-FA9ACCC8467F}"
 	ProjectSection(SolutionItems) = preProject
-		Deploy\azure-pipelines-db.yaml = Deploy\azure-pipelines-db.yaml
+		Deploy\azure-pipelines-auth.yml = Deploy\azure-pipelines-auth.yml
 		Deploy\azure-pipelines-webapp.yaml = Deploy\azure-pipelines-webapp.yaml
 		Deploy\build-push-db.ps1 = Deploy\build-push-db.ps1
 		Deploy\build-push-webapp.ps1 = Deploy\build-push-webapp.ps1
@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D97924
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbUsers.Build", "DbUsers.Build\DbUsers.Build.csproj", "{F1A278A9-EEC6-4318-A50C-C048D9E376BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.UnitTests", "Auth.UnitTests\Auth.UnitTests.csproj", "{756DD1F1-E3B2-496A-B950-9FA8FB11F273}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth.UnitTests", "Auth.UnitTests\Auth.UnitTests.csproj", "{756DD1F1-E3B2-496A-B950-9FA8FB11F273}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
