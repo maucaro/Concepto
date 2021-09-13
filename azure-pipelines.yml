@@ -16,14 +16,11 @@ variables:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: Publish
+  displayName: Build
   inputs:
     projects: '$(project)'
-    publishWebProjects: false
-    command: publish
+    command: build
     arguments: '--configuration $(BuildConfiguration) --framework=$(TargetFramework)'
-    zipAfterPublish: false
-    modifyOutputPath: false
 
 - task: UsePythonVersion@0
   inputs:
