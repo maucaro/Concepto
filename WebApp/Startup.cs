@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vida.Prueba.Auth;
@@ -25,6 +26,14 @@ namespace Vida.Prueba.WebApp
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddRazorPages();
+      //services.Configure<PermissionHandlerSqlOptions>(Configuration.GetSection("DbUsers"));
+      services.AddSingleton<IPermissionHandlerData, PermissionHandlerSql>(/*sp =>
+      {
+        PermissionHandlerSqlOptions sqlOptions = new();
+        Configuration.GetSection("DbUsers").Bind(sqlOptions);
+        PermissionHandlerSql permissionHandlerSql = new(sqlOptions, sp.GetService<ILogger>());
+        return permissionHandlerSql;
+      }*/);
       services.AddSingleton<IAuthorizationPolicyProvider, PermissionsPolicyProvider>();
       services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
       services.AddAuthorization();
