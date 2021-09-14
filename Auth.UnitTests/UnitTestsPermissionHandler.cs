@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,7 +15,6 @@ namespace Vida.Prueba.Auth.UnitTests
     private const string sub = "sub";
     private const string email = "test@maucaro.com";
     private const string tenant = "maucaro";
-    private const string scheme = "default";
     private readonly Mock<ILogger<PermissionHandler>> _logger;
     private readonly AuthorizationHandler<HasPermission> _permissionHandler;
 
@@ -30,30 +28,68 @@ namespace Vida.Prueba.Auth.UnitTests
       _permissionHandler = new PermissionHandler(permissionHandlerMock, _logger.Object);
     }
 
-    [TestMethod]
-    public async Task Test_HasPermission()
+    private async Task HasPermissionHelper(string tenant, string[] roles, string permission, bool success, PermissionHandler permissionHandler = null)
     {
-
+      if (permissionHandler == null)
+      {
+        permissionHandler = (PermissionHandler)_permissionHandler;
+      }
       List<Claim> claims = new()
       {
         new Claim(ClaimTypes.NameIdentifier, sub),
         new Claim(ClaimTypes.Email, email),
         new Claim(CustomAuthenticationDefaults.TenantClaim, tenant)
       };
-
-      List<string> roles = new() { "role1" };
       foreach (string role in roles)
       {
         claims.Add(new Claim(ClaimTypes.Role, role));
       }
       var claimsIdentity = new ClaimsIdentity(claims, nameof(ValidateAuthenticationHandler));
       var user = new ClaimsPrincipal(claimsIdentity);
-      var requirement = new HasPermission("perm1");
+      var requirement = new HasPermission(permission);
       var requirements = new List<HasPermission> { requirement };
       var context = new DefaultHttpContext();
       var handlerContext = new AuthorizationHandlerContext(requirements, user, context);
-      await _permissionHandler.HandleAsync(handlerContext);
-      Assert.IsTrue(handlerContext.HasSucceeded);
+      await permissionHandler.HandleAsync(handlerContext);
+      if (success)
+      {
+        Assert.IsTrue(handlerContext.HasSucceeded);
+      }
+      else
+      {
+        Assert.IsFalse(handlerContext.HasSucceeded);
+      }
+
+    }
+
+    [TestMethod]
+    public async Task Test_HasPermission()
+    {
+      await HasPermissionHelper(tenant, new string[] { "role1" }, "perm1", true);
+    }
+    [TestMethod]
+    public async Task Test_InexistentRole()
+    {
+      await HasPermissionHelper(tenant, new string[] { "role3" }, "perm1", false);
+    }
+    [TestMethod]
+    public async Task Test_NoPermission()
+    {
+      await HasPermissionHelper(tenant, new string[] { "role2" }, "perm1", false);
+    }
+    [TestMethod]
+    public async Task Test_InexistentTenant()
+    {
+      await HasPermissionHelper("faketenant", new string[] { "role1" }, "perm1", false);
+    }
+
+    [TestMethod]
+    public async Task Test_EmptyPermissionHandlerData()
+    {
+      PermissionHandlerMock permissionHandlerMock = new();
+      permissionHandlerMock.SetPermissionRoles(new Dictionary<string, Dictionary<string, HashSet<string>>>());
+      var permissionHandler = new PermissionHandler(permissionHandlerMock, _logger.Object);
+      await HasPermissionHelper(tenant, new string[] { "role1" }, "perm1", false, permissionHandler);
     }
   }
 }

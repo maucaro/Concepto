@@ -15,7 +15,7 @@ namespace Vida.Prueba.Auth.UnitTests
     private readonly string _permission2 = "perm2";
     private readonly string _permission3 = "perm3";
 
-    private readonly Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles = new();
+    private Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles = new();
 
     public PermissionHandlerMock()
     {
@@ -29,6 +29,11 @@ namespace Vida.Prueba.Auth.UnitTests
     public Dictionary<string, Dictionary<string, HashSet<string>>> GetPermissionRoles()
     {
       return _permissionRoles;
+    }
+
+    public void SetPermissionRoles(Dictionary<string, Dictionary<string, HashSet<string>>> permissionRoles)
+    {
+      _permissionRoles = permissionRoles;
     }
   }
 }
