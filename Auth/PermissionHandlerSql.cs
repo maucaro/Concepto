@@ -1,11 +1,8 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace Vida.Prueba.Auth
@@ -16,13 +13,12 @@ namespace Vida.Prueba.Auth
     private Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles = new();
     private readonly PermissionHandlerSqlOptions _options;
     private readonly Timer _timer;
-    public PermissionHandlerSql(IConfiguration configuration, ILogger<PermissionHandlerSql> logger)
+    public PermissionHandlerSql(IOptions<PermissionHandlerSqlOptions> options, ILogger<PermissionHandlerSql> logger)
     {
-      _options = new();
-      configuration.GetSection("DbUsers").Bind(_options);
+      _options = options.Value;
       _logger = logger;
       this.UpdatePermissionRoles();
-      _timer = new System.Timers.Timer
+      _timer = new Timer
       {
         Interval = _options.IntervalSeconds * 1000
       };
@@ -44,53 +40,51 @@ namespace Vida.Prueba.Auth
     private void UpdatePermissionRoles()
     {
       Dictionary<string, Dictionary<string, HashSet<string>>> permissionRoles = new();
-      using (SqlConnection connection = new(_options.ConnectionString))
+      using SqlConnection connection = new(_options.ConnectionString);
+      connection.Open();
+      SqlCommand command = new();
+      command.Connection = connection;
+      command.CommandText = _options.PermissionRolesStoredProcedure;
+      command.CommandType = System.Data.CommandType.StoredProcedure;
+      try
       {
-        connection.Open();
-        SqlCommand command = new();
-        command.Connection = connection;
-        command.CommandText = _options.PermissionRolesStoredProcedure;
-        command.CommandType = System.Data.CommandType.StoredProcedure;
-        try
+        using SqlDataReader reader = command.ExecuteReader();
+        if (reader.HasRows)
         {
-          using SqlDataReader reader = command.ExecuteReader();
-          if (reader.HasRows)
+          while (reader.Read())
           {
-            while (reader.Read())
+            var tenant = (string)reader[_options.TenantField] ?? String.Empty;
+            var permission = (string)reader[_options.PermissionField];
+            var role = (string)reader[_options.RoleField];
+            Dictionary<string, HashSet<string>> permissionRolesTenant;
+            if (!permissionRoles.ContainsKey(tenant))
             {
-              var tenant = (string)reader[_options.TenantField] ?? String.Empty;
-              var permission = (string)reader[_options.PermissionField];
-              var role = (string)reader[_options.RoleField];
-              Dictionary<string, HashSet<string>> permissionRolesTenant;
-              if (!permissionRoles.ContainsKey(tenant))
-              {
-                permissionRolesTenant = new();
-                permissionRoles.Add(tenant, permissionRolesTenant);
-              }
-              else
-              {
-                permissionRolesTenant = permissionRoles.GetValueOrDefault(tenant);
-              }
-              if (permissionRolesTenant.ContainsKey(permission))
-              {
-                permissionRolesTenant.GetValueOrDefault(permission).Add(role);
-              }
-              else
-              {
-                HashSet<string> roles = new() { role };
-                permissionRolesTenant.Add(permission, roles);
-              }
-
+              permissionRolesTenant = new();
+              permissionRoles.Add(tenant, permissionRolesTenant);
             }
+            else
+            {
+              permissionRolesTenant = permissionRoles.GetValueOrDefault(tenant);
+            }
+            if (permissionRolesTenant.ContainsKey(permission))
+            {
+              permissionRolesTenant.GetValueOrDefault(permission).Add(role);
+            }
+            else
+            {
+              HashSet<string> roles = new() { role };
+              permissionRolesTenant.Add(permission, roles);
+            }
+
           }
-          reader.Close();
-          _logger.LogInformation("Permissions and Roles refreshed");
-          _permissionRoles = permissionRoles;
         }
-        catch (Exception ex)
-        {
-          _logger.LogError(ex, "Error refreshing permissions and roles");
-        }
+        reader.Close();
+        _logger.LogInformation("Permissions and Roles refreshed");
+        _permissionRoles = permissionRoles;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error refreshing permissions and roles");
       }
     }
   }

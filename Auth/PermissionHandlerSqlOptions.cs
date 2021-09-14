@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Timers;
 
 namespace Vida.Prueba.Auth
 {
-  public class PermissionHandlerSqlOptions 
+  public class PermissionHandlerSqlOptions
   {
     private string _connectionString;
     private string _permissionRolesStoredProcedure;
@@ -48,7 +46,7 @@ namespace Vida.Prueba.Auth
     }
     public string PermissionField
     {
-      get 
+      get
       {
         return _permissionField;
       }
@@ -79,7 +77,7 @@ namespace Vida.Prueba.Auth
       set
       {
         _intervalSeconds = value >= 0 ? value : throw new ArgumentOutOfRangeException(nameof(IntervalSeconds));
-       }
+      }
     }
   }
 }
