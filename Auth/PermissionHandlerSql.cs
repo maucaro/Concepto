@@ -26,10 +26,10 @@ namespace Vida.Prueba.Auth
       _timer.AutoReset = true;
       _timer.Enabled = true;
     }
-    public bool HasPermission(string tenant, string permission, HashSet<string> userRoles)
+
+    public Dictionary<string, Dictionary<string, HashSet<string>>> GetPermissionRoles()
     {
-      HashSet<string> permissionRoles = _permissionRoles.GetValueOrDefault(tenant).GetValueOrDefault(permission);
-      return permissionRoles.Overlaps(userRoles);
+      return _permissionRoles;
     }
 
     private void UpdatePermissionRoles(Object source, System.Timers.ElapsedEventArgs e)
