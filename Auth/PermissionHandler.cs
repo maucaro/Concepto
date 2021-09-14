@@ -23,7 +23,7 @@ namespace Vida.Prueba.Auth
     {
       string tenant = context.User.Claims.Where(c => c.Type == CustomAuthenticationDefaults.TenantClaim).Select(c => c.Value).FirstOrDefault() ?? string.Empty;
       HashSet<string> userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToHashSet();
-      HashSet<string> permissionRoles = _permissionHandlerData.GetPermissionRoles()?.GetValueOrDefault(tenant)?.GetValueOrDefault(requirement.Permission);
+      HashSet<string> permissionRoles = _permissionHandlerData.GetRoles(tenant, requirement.Permission);
       if (permissionRoles != null && permissionRoles.Overlaps(userRoles))
       {
         context.Succeed(requirement);

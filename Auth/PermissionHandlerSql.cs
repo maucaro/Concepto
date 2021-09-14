@@ -10,7 +10,7 @@ namespace Vida.Prueba.Auth
   public class PermissionHandlerSql : IPermissionHandlerData
   {
     private readonly ILogger _logger;
-    private Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles = new();
+    private Dictionary<string, Dictionary<string, HashSet<string>>> _permissionRoles;
     private readonly PermissionHandlerSqlOptions _options;
     private readonly Timer _timer;
     public PermissionHandlerSql(IOptions<PermissionHandlerSqlOptions> options, ILogger<PermissionHandlerSql> logger)
@@ -27,9 +27,9 @@ namespace Vida.Prueba.Auth
       _timer.Enabled = true;
     }
 
-    public Dictionary<string, Dictionary<string, HashSet<string>>> GetPermissionRoles()
+    public HashSet<string> GetRoles(string tenant, string permission)
     {
-      return _permissionRoles;
+      return _permissionRoles?.GetValueOrDefault(tenant ?? string.Empty)?.GetValueOrDefault(permission ?? string.Empty) ;
     }
 
     private void UpdatePermissionRoles(Object source, System.Timers.ElapsedEventArgs e)

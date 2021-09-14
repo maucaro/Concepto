@@ -4,7 +4,7 @@ namespace Vida.Prueba.Auth
 {
   public interface IPermissionHandlerData
   {
-    Dictionary<string, Dictionary<string, HashSet<string>>> GetPermissionRoles();
+    HashSet<string> GetRoles(string tenant, string permission);
   }
 
   public interface IPermissionHandlerDataOptions

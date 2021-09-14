@@ -26,9 +26,9 @@ namespace Vida.Prueba.Auth.UnitTests
 
       _permissionRoles.Add(_tenant, permRoles);
     }
-    public Dictionary<string, Dictionary<string, HashSet<string>>> GetPermissionRoles()
+    public HashSet<string> GetRoles(string tenant, string permission)
     {
-      return _permissionRoles;
+      return _permissionRoles?.GetValueOrDefault(tenant ?? string.Empty)?.GetValueOrDefault(permission ?? string.Empty);
     }
 
     public void SetPermissionRoles(Dictionary<string, Dictionary<string, HashSet<string>>> permissionRoles)
