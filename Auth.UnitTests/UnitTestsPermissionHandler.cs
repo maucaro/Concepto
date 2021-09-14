@@ -37,9 +37,12 @@ namespace Vida.Prueba.Auth.UnitTests
       List<Claim> claims = new()
       {
         new Claim(ClaimTypes.NameIdentifier, sub),
-        new Claim(ClaimTypes.Email, email),
-        new Claim(CustomAuthenticationDefaults.TenantClaim, tenant)
+        new Claim(ClaimTypes.Email, email)
       };
+      if (tenant != null)
+      {
+        claims.Add(new Claim(CustomAuthenticationDefaults.TenantClaim, tenant));
+      }
       foreach (string role in roles)
       {
         claims.Add(new Claim(ClaimTypes.Role, role));
@@ -68,9 +71,19 @@ namespace Vida.Prueba.Auth.UnitTests
       await HasPermissionHelper(tenant, new string[] { "role1" }, "perm1", true);
     }
     [TestMethod]
+    public async Task Test_HasPermissionTwoRoles()
+    {
+      await HasPermissionHelper(tenant, new string[] { "role1", "role3" }, "perm1", true);
+    }
+    [TestMethod]
     public async Task Test_InexistentRole()
     {
       await HasPermissionHelper(tenant, new string[] { "role3" }, "perm1", false);
+    }
+    [TestMethod]
+    public async Task Test_NoRole()
+    {
+      await HasPermissionHelper(tenant, System.Array.Empty<string>(), "perm1", false);
     }
     [TestMethod]
     public async Task Test_NoPermission()
@@ -82,12 +95,26 @@ namespace Vida.Prueba.Auth.UnitTests
     {
       await HasPermissionHelper("faketenant", new string[] { "role1" }, "perm1", false);
     }
+    [TestMethod]
+    public async Task Test_NoTenant()
+    {
+      await HasPermissionHelper(null, new string[] { "role1" }, "perm1", false);
+    }
 
     [TestMethod]
     public async Task Test_EmptyPermissionHandlerData()
     {
       PermissionHandlerMock permissionHandlerMock = new();
       permissionHandlerMock.SetPermissionRoles(new Dictionary<string, Dictionary<string, HashSet<string>>>());
+      var permissionHandler = new PermissionHandler(permissionHandlerMock, _logger.Object);
+      await HasPermissionHelper(tenant, new string[] { "role1" }, "perm1", false, permissionHandler);
+    }
+    [TestMethod]
+    public async Task Test_NullPermissionHandlerData()
+    {
+      PermissionHandlerMock permissionHandlerMock = new();
+      Dictionary<string, Dictionary<string, HashSet<string>>> nullData = null;
+      permissionHandlerMock.SetPermissionRoles(nullData);
       var permissionHandler = new PermissionHandler(permissionHandlerMock, _logger.Object);
       await HasPermissionHelper(tenant, new string[] { "role1" }, "perm1", false, permissionHandler);
     }
