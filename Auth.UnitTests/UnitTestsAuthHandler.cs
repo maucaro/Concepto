@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Vida.Prueba.Auth.UnitTests
 {
   [TestClass]
-  public class UnitTestAuthHandler
+  public class UnitTestsAuthHandler
   {
     private const string _testUser = "test@maucaro.com";
     private const string _environmentName = "Development";
@@ -26,7 +26,7 @@ namespace Vida.Prueba.Auth.UnitTests
     private readonly Mock<ISystemClock> _clock;
     private readonly ValidateAuthenticationHandler _handler;
 
-    public UnitTestAuthHandler()
+    public UnitTestsAuthHandler()
     {
       var configuration = new ConfigurationBuilder()
           .SetBasePath(Directory.GetCurrentDirectory())
