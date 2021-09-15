@@ -35,24 +35,27 @@ namespace Vida.Prueba.Auth
       try
       {
         TokenClaims tokenClaims = await JsonWebSignature.VerifySignedTokenAsync<TokenClaims>(rawToken, Options.TokenVerificationOptions);
-        if (string.IsNullOrWhiteSpace(tokenClaims.Sub) || string.IsNullOrWhiteSpace(tokenClaims.Email))
+        if (string.IsNullOrWhiteSpace(tokenClaims.sub) || string.IsNullOrWhiteSpace(tokenClaims.email))
         {
           return AuthenticateResult.Fail("Error validating token: 'sub' and 'email' claims are required");
         }
-        if (!Options.ValidTenants.Contains(tokenClaims.Firebase.Tenant))
+        var tenant = tokenClaims.firebase?.tenant ?? string.Empty;
+        if (!Options.ValidTenants.Contains(tenant))
         {
           return AuthenticateResult.Fail("Error validating token: JWT contains invalid 'tenant' claim.");
         }
         List<Claim> claims = new()
         {
-          new Claim(ClaimTypes.NameIdentifier, tokenClaims.Sub),
-          new Claim(ClaimTypes.Email, tokenClaims.Email),
-          new Claim(CustomAuthenticationDefaults.TenantClaim, tokenClaims.Firebase.Tenant)
+          new Claim(ClaimTypes.NameIdentifier, tokenClaims.sub),
+          new Claim(ClaimTypes.Email, tokenClaims.email),
+          new Claim(CustomAuthenticationDefaults.TenantClaim, tenant)
         };
-
-        foreach (string role in tokenClaims.Roles)
+        if (tokenClaims.roles != null)
         {
-          claims.Add(new Claim(ClaimTypes.Role, role));
+          foreach (string role in tokenClaims.roles)
+          {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+          }
         }
         var claimsIdentity = new ClaimsIdentity(claims, nameof(ValidateAuthenticationHandler));
         var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), this.Scheme.Name);
@@ -90,35 +93,19 @@ namespace Vida.Prueba.Auth
 
     private class TokenClaims : JsonWebSignature.Payload
     {
-      public TokenClaims(string sub, string email, List<string> roles, FirbaseClaim firebase)
-      {
-        Sub = sub;
-        Email = email;
-        Roles = !(roles == null) ? roles : new List<string>();
-        Firebase = !(firebase == null) ? firebase : new FirbaseClaim();
-      }
-      [JsonPropertyName("sub")]
-      public string Sub { get; set; }
+      public string sub { get; set; }
 
-      [JsonPropertyName("email")]
-      public string Email { get; set; }
+      public string email { get; set; }
 
-      [JsonPropertyName("roles")]
-      public List<string> Roles { get; set; }
+      public List<string> roles { get; set; }
 
-      [JsonPropertyName("firebase")]
-      public FirbaseClaim Firebase { get; set; }
+      public FirbaseClaim firebase { get; set; }
 
     }
 
     private class FirbaseClaim
     {
-      public FirbaseClaim(string tenant = "")
-      {
-        Tenant = !(String.IsNullOrWhiteSpace(tenant)) ? tenant : String.Empty;
-      }
-      [JsonPropertyName("tenant")]
-      public string Tenant { get; set; }
+      public string tenant { get; set; }
     }
   }
 }
