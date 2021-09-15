@@ -15,17 +15,15 @@ namespace Vida.Prueba.Auth.UnitTests
     private const string sub = "sub";
     private const string email = "test@maucaro.com";
     private const string tenant = "maucaro";
-    private readonly Mock<ILogger<PermissionHandler>> _logger;
     private readonly AuthorizationHandler<HasPermission> _permissionHandler;
 
     public UnitTestsPermissionHandler()
     {
-      _logger = new Mock<ILogger<PermissionHandler>>();
       // PermissionHandlerMock has following tenant, permission, role mappings:
       // maucaro -> perm1 -> role1
       // maucaro -> perm2 -> role2, role3
       PermissionHandlerMock permissionHandlerMock = new();
-      _permissionHandler = new PermissionHandler(permissionHandlerMock, _logger.Object);
+      _permissionHandler = new PermissionHandler(permissionHandlerMock);
     }
 
     private async Task HasPermissionHelper(string tenant, string[] roles, string permission, bool success, PermissionHandler permissionHandler = null)
@@ -106,7 +104,7 @@ namespace Vida.Prueba.Auth.UnitTests
     {
       PermissionHandlerMock permissionHandlerMock = new();
       permissionHandlerMock.SetPermissionRoles(new Dictionary<string, Dictionary<string, HashSet<string>>>());
-      var permissionHandler = new PermissionHandler(permissionHandlerMock, _logger.Object);
+      var permissionHandler = new PermissionHandler(permissionHandlerMock);
       await HasPermissionHelper(tenant, new string[] { "role1" }, "perm1", false, permissionHandler);
     }
     [TestMethod]
@@ -115,7 +113,7 @@ namespace Vida.Prueba.Auth.UnitTests
       PermissionHandlerMock permissionHandlerMock = new();
       Dictionary<string, Dictionary<string, HashSet<string>>> nullData = null;
       permissionHandlerMock.SetPermissionRoles(nullData);
-      var permissionHandler = new PermissionHandler(permissionHandlerMock, _logger.Object);
+      var permissionHandler = new PermissionHandler(permissionHandlerMock);
       await HasPermissionHelper(tenant, new string[] { "role1" }, "perm1", false, permissionHandler);
     }
   }

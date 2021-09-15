@@ -1,16 +1,12 @@
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -53,7 +49,7 @@ namespace Vida.Prueba.Auth
           new Claim(ClaimTypes.Email, tokenClaims.Email),
           new Claim(CustomAuthenticationDefaults.TenantClaim, tokenClaims.Firebase.Tenant)
         };
-        
+
         foreach (string role in tokenClaims.Roles)
         {
           claims.Add(new Claim(ClaimTypes.Role, role));

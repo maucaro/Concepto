@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -9,13 +8,11 @@ namespace Vida.Prueba.Auth
 {
   public class PermissionHandler : AuthorizationHandler<HasPermission>
   {
-    private readonly ILogger _logger;
     private readonly IPermissionHandlerData _permissionHandlerData;
 
 
-    public PermissionHandler(IPermissionHandlerData permissionHandlerData, ILogger<PermissionHandler> logger)
+    public PermissionHandler(IPermissionHandlerData permissionHandlerData)
     {
-      _logger = logger;
       _permissionHandlerData = permissionHandlerData;
     }
 
@@ -23,8 +20,8 @@ namespace Vida.Prueba.Auth
     {
       string tenant = context.User.Claims.Where(c => c.Type == CustomAuthenticationDefaults.TenantClaim).Select(c => c.Value).FirstOrDefault() ?? string.Empty;
       HashSet<string> userRoles = context.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToHashSet();
-      HashSet<string> permissionRoles = _permissionHandlerData.GetRoles(tenant, requirement.Permission);
-      if (permissionRoles != null && permissionRoles.Overlaps(userRoles))
+      IEnumerable<string> permissionRoles = _permissionHandlerData.GetRoles(tenant, requirement.Permission);
+      if (userRoles != null && permissionRoles != null && userRoles.Overlaps(permissionRoles))
       {
         context.Succeed(requirement);
       }

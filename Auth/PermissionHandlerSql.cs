@@ -27,7 +27,7 @@ namespace Vida.Prueba.Auth
       _timer.Enabled = true;
     }
 
-    public HashSet<string> GetRoles(string tenant, string permission)
+    public IEnumerable<string> GetRoles(string tenant, string permission)
     {
       return _permissionRoles?.GetValueOrDefault(tenant ?? string.Empty)?.GetValueOrDefault(permission ?? string.Empty) ;
     }
