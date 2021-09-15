@@ -13,17 +13,12 @@ namespace Vida.Prueba.Auth
 {
   public class ValidateAuthenticationHandler : AuthenticationHandler<ValidateAuthenticationSchemeOptions>
   {
-    private List<string> _validTenants;
     public ValidateAuthenticationHandler(
         IOptionsMonitor<ValidateAuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock)
-        : base(options, logger, encoder, clock) 
-    {
-      // Default value for ValidTenants is '{ "" }' - makes it easier for single-tenant use cases
-      _validTenants = options.CurrentValue.ValidTenants ?? new List<string> { "" };
-    }
+        : base(options, logger, encoder, clock) { }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
@@ -44,7 +39,10 @@ namespace Vida.Prueba.Auth
           return AuthenticateResult.Fail("Error validating token: 'sub' and 'email' claims are required");
         }
         var tenant = tokenClaims.firebase?.tenant ?? string.Empty;
-        if (!_validTenants.Contains(tenant))
+
+        // Default value for ValidTenants is '{ "" }' - makes it easier for single-tenant use cases
+        List<string> validTenants = Options.ValidTenants ?? new List<string> { "" };
+        if (!validTenants.Contains(tenant))
         {
           return AuthenticateResult.Fail("Error validating token: JWT contains invalid 'tenant' claim.");
         }
