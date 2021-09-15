@@ -46,6 +46,10 @@ namespace Vida.Prueba.Auth.UnitTests
           .Setup(x => x.Get(It.IsAny<string>()))
           .Returns(options);
 
+      _options
+        .Setup(x => x.CurrentValue)
+        .Returns(options);
+
       var logger = new Mock<ILogger<ValidateAuthenticationHandler>>();
       _loggerFactory = new Mock<ILoggerFactory>();
       _loggerFactory.Setup(x => x.CreateLogger(It.IsAny<String>())).Returns(logger.Object);
