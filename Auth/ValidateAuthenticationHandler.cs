@@ -40,9 +40,8 @@ namespace Vida.Prueba.Auth
         }
         var tenant = tokenClaims.firebase?.tenant ?? string.Empty;
 
-        // Default value for ValidTenants is '{ "" }' - makes it easier for single-tenant use cases
-        List<string> validTenants = Options.ValidTenants ?? new List<string> { "" };
-        if (!validTenants.Contains(tenant))
+        // Only check for valid tenants if option has been set
+        if (Options.ValidTenants != null && !Options.ValidTenants.Contains(tenant))
         {
           return AuthenticateResult.Fail("Error validating token: JWT contains invalid 'tenant' claim.");
         }
