@@ -38,19 +38,22 @@ namespace Vida.Prueba.Auth
         {
           return AuthenticateResult.Fail("Error validating token: 'sub' and 'email' claims are required");
         }
-        var tenant = tokenClaims.firebase?.tenant ?? string.Empty;
+        var tenant = tokenClaims.firebase?.tenant;
 
         // Only check for valid tenants if option has been set
-        if (Options.ValidTenants != null && !Options.ValidTenants.Contains(tenant))
+        if (Options.ValidTenants != null && !Options.ValidTenants.Contains(tenant ?? string.Empty))
         {
           return AuthenticateResult.Fail("Error validating token: JWT contains invalid 'tenant' claim.");
         }
         List<Claim> claims = new()
         {
           new Claim(ClaimTypes.NameIdentifier, tokenClaims.sub),
-          new Claim(ClaimTypes.Email, tokenClaims.email),
-          new Claim(CustomAuthenticationDefaults.TenantClaim, tenant)
+          new Claim(ClaimTypes.Email, tokenClaims.email)
         };
+        if (tenant != null)
+        {
+          claims.Add(new Claim(CustomAuthenticationDefaults.TenantClaim, tenant));
+        }
         if (tokenClaims.roles != null)
         {
           foreach (string role in tokenClaims.roles)
