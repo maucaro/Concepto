@@ -1,4 +1,3 @@
-using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
@@ -33,11 +31,8 @@ namespace Vida.Prueba.Auth.UnitTests
           .AddJsonFile("appsettings.json")
           .AddJsonFile($"appsettings.{_environmentName}.json", true, true)
           .Build();
-      SignedTokenVerificationOptions tokenOptions = new();
-      configuration.GetSection("AuthOptions:TokenVerificationOptions").Bind(tokenOptions);
       ValidateAuthenticationSchemeOptions options = new();
-      options.TokenVerificationOptions = tokenOptions;
-      options.ValidTenants = configuration.GetSection("AuthOptions:ValidTenants").Get<List<string>>();
+      configuration.GetSection("AuthOptions").Bind(options);
 
       _options = new Mock<IOptionsMonitor<ValidateAuthenticationSchemeOptions>>();
 

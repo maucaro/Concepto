@@ -1,4 +1,3 @@
-using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vida.Prueba.Auth;
 
@@ -34,10 +32,7 @@ namespace Vida.Prueba.WebApp
       .AddAuthentication(options => { options.DefaultScheme = CustomAuthenticationDefaults.AuthenticationScheme; })
       .AddCustomAuth(options =>
       {
-        SignedTokenVerificationOptions tokenOptions = new();
-        Configuration.GetSection("AuthOptions:TokenVerificationOptions").Bind(tokenOptions);
-        options.TokenVerificationOptions = tokenOptions;
-        options.ValidTenants = Configuration.GetSection("AuthOptions:ValidTenants").Get<List<string>>();
+        Configuration.GetSection("AuthOptions").Bind(options);
       });
     }
 

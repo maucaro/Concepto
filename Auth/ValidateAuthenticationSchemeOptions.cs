@@ -6,7 +6,8 @@ namespace Vida.Prueba.Auth
 {
   public class ValidateAuthenticationSchemeOptions : AuthenticationSchemeOptions
   {
-    public SignedTokenVerificationOptions TokenVerificationOptions { get; set; }
+    public string CertificatesUrl { get; set; }
+    public string TrustedAudience { get; set; }
     public List<string> ValidTenants { get; set; }
   }
 }

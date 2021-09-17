@@ -22,6 +22,16 @@ namespace Vida.Prueba.Auth
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+      string certificatesUrl = Options.CertificatesUrl ?? CustomAuthenticationDefaults.CertificatesUrl;
+      // TrustedAudiences must be provided
+      string trustedAudience = Options.TrustedAudience;
+      if (trustedAudience == null)
+      {
+        return AuthenticateResult.Fail("Error validating token: AuthOptions:TrustedAudience needs to be set");
+      }
+      // If ValidTenants == null, no tenant verification will be done
+      List<string> validTenants = Options.ValidTenants;
+
       if (!Request.Headers.ContainsKey(HeaderNames.Authorization))
       {
         return AuthenticateResult.Fail("Authorization header missing");
@@ -33,7 +43,16 @@ namespace Vida.Prueba.Auth
       }
       try
       {
-        TokenClaims tokenClaims = await JsonWebSignature.VerifySignedTokenAsync<TokenClaims>(rawToken, Options.TokenVerificationOptions);
+        SignedTokenVerificationOptions tokenOptions = new ()
+        {
+          // Use clock tolerance to account for possible clock differences
+          // between the issuer and the verifier.
+          IssuedAtClockTolerance = TimeSpan.FromMinutes(1),
+          ExpiryClockTolerance = TimeSpan.FromMinutes(1),
+          CertificatesUrl = certificatesUrl,
+          TrustedAudiences = { trustedAudience }
+        };
+        TokenClaims tokenClaims = await JsonWebSignature.VerifySignedTokenAsync<TokenClaims>(rawToken, tokenOptions);
         if (string.IsNullOrWhiteSpace(tokenClaims.sub) || string.IsNullOrWhiteSpace(tokenClaims.email))
         {
           return AuthenticateResult.Fail("Error validating token: 'sub' and 'email' claims are required");
@@ -41,7 +60,7 @@ namespace Vida.Prueba.Auth
         var tenant = tokenClaims.firebase?.tenant;
 
         // Only check for valid tenants if option has been set
-        if (Options.ValidTenants != null && !Options.ValidTenants.Contains(tenant ?? string.Empty))
+        if (validTenants != null && !validTenants.Contains(tenant ?? string.Empty))
         {
           return AuthenticateResult.Fail("Error validating token: JWT contains invalid 'tenant' claim.");
         }
