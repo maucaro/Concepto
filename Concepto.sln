@@ -9,14 +9,11 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DbUsers", "DbUsers\DbUsers.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B640508F-8FB6-4194-9EF3-1DA240B2385F}"
 	ProjectSection(SolutionItems) = preProject
-		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth", "Auth\Auth.csproj", "{AA4D2A46-3278-4CFE-BC26-75066BB8DB17}"
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2DB464E6-40EC-4B1C-9DA2-257352965768}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{D9792403-27DF-46F5-B614-FA9ACCC8467F}"
 	ProjectSection(SolutionItems) = preProject
@@ -58,10 +55,6 @@ Global
 		{AA4D2A46-3278-4CFE-BC26-75066BB8DB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA4D2A46-3278-4CFE-BC26-75066BB8DB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA4D2A46-3278-4CFE-BC26-75066BB8DB17}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DB464E6-40EC-4B1C-9DA2-257352965768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DB464E6-40EC-4B1C-9DA2-257352965768}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DB464E6-40EC-4B1C-9DA2-257352965768}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DB464E6-40EC-4B1C-9DA2-257352965768}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F1A278A9-EEC6-4318-A50C-C048D9E376BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F1A278A9-EEC6-4318-A50C-C048D9E376BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1A278A9-EEC6-4318-A50C-C048D9E376BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
