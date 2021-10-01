@@ -69,6 +69,10 @@ namespace Vida.Prueba.Auth
           new Claim(ClaimTypes.NameIdentifier, tokenClaims.sub),
           new Claim(ClaimTypes.Email, tokenClaims.email)
         };
+        if (tokenClaims.name != null)
+        {
+          claims.Add(new Claim(ClaimTypes.Name, tokenClaims.name));
+        }
         if (tenant != null)
         {
           claims.Add(new Claim(CustomAuthenticationDefaults.TenantClaim, tenant));
@@ -119,6 +123,8 @@ namespace Vida.Prueba.Auth
       public string sub { get; set; }
 
       public string email { get; set; }
+
+      public string name { get; set; }
 
       public List<string> roles { get; set; }
 
