@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Timers;
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public class PermissionHandlerSql : IPermissionHandlerData
   {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public class PermissionHandler : AuthorizationHandler<HasPermission>
   {

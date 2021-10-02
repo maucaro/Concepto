@@ -10,7 +10,6 @@ trigger:
   paths:
     include:
     - WebApp
-    - Auth
 variables:
   TargetFramework: 'net5.0'
   BuildConfiguration: 'Release'

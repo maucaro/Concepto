@@ -1,6 +1,6 @@
 using System;
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public class PermissionHandlerSqlOptions
   {

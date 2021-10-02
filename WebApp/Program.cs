@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Vida.Prueba.WebApp
+namespace Maucaro.Auth.IdentityPlatform.Sample
 {
   public class Program
   {

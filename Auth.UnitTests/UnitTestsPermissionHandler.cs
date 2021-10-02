@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Vida.Prueba.Auth.UnitTests
+namespace Maucaro.Auth.IdentityPlatform.UnitTests
 {
   [TestClass]
   public class UnitTestsPermissionHandler

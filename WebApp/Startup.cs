@@ -6,9 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using Vida.Prueba.Auth;
+using Maucaro.Auth.IdentityPlatform;
 
-namespace Vida.Prueba.WebApp
+namespace Maucaro.Auth.IdentityPlatform.Sample
 {
   public class Startup
   {

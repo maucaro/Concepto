@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public class ValidateAuthenticationHandler : AuthenticationHandler<ValidateAuthenticationSchemeOptions>
   {

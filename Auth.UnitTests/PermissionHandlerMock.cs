@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Vida.Prueba.Auth.UnitTests
+namespace Maucaro.Auth.IdentityPlatform.UnitTests
 {
   class PermissionHandlerMock : IPermissionHandlerData
   {

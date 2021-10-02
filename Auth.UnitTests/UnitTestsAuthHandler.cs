@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace Vida.Prueba.Auth.UnitTests
+namespace Maucaro.Auth.IdentityPlatform.UnitTests
 {
   [TestClass]
   public class UnitTestsAuthHandler

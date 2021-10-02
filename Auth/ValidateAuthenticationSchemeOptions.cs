@@ -2,7 +2,7 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public class ValidateAuthenticationSchemeOptions : AuthenticationSchemeOptions
   {

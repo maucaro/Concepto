@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public class PermissionsPolicyProvider : DefaultAuthorizationPolicyProvider
   {

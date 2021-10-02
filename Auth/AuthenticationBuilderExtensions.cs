@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using System;
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public static class AuthenticationBuilderExtensions
   {

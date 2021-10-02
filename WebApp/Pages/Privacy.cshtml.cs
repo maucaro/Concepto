@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace Vida.Prueba.WebApp.Pages
+namespace Maucaro.Auth.IdentityPlatform.Sample.Pages
 {
   [Authorize(Roles = "Admin")]
   [Authorize(Policy = "AdministerUsers")]

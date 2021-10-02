@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Vida.Prueba.Auth
+namespace Maucaro.Auth.IdentityPlatform
 {
   public interface IPermissionHandlerData
   {
